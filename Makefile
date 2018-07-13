@@ -1,8 +1,8 @@
 NAME = calc
 FLAGS = -Wall -Wextra -Werror
 CC = gcc
-SRCS = main.c parse.c ft_helpers.c
-OUT = main.o parse.o ft_helpers.o
+SRCS = main.c parse.c ft_helpers.c eval_expr.c
+OUT = main.o parse.o ft_helpers.o eval_expr.o
 
 all: $(NAME)
 
