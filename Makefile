@@ -7,7 +7,7 @@ OUT = main.o parse.o ft_helpers.o
 all: $(NAME)
 
 $(NAME):
-		@$(CC) libft/libft.a -I ./ $(SRCS) -o $(NAME)
+		@$(CC) $(SRCS) -o $(NAME)
 
 clean:
 		/bin/rm -f $(OUT)
