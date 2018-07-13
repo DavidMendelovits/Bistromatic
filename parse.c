@@ -14,6 +14,7 @@
 
 int     begin_parse(char *base, int expr_size)
 {
+
     read_expression(expr_size);
     return (1);
 }
@@ -23,6 +24,7 @@ char    *read_expression(int expr_size)
     int     ret;
     char    buf[expr_size + 1];
     char	*_buf;
+
     ret = read(0, buf, expr_size);
     if (ret == -1)
     {
@@ -30,6 +32,6 @@ char    *read_expression(int expr_size)
         return (NULL);
     }
 	_buf = ft_strdup(buf);
-    printf("buffer: %s\n", _buf);
+    printf("buffer: %s\n", buf);
     return (_buf);
 }  

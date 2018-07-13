@@ -1,26 +1,19 @@
-# **************************************************************************** #
-#                                                                              #
-#                                                         :::      ::::::::    #
-#    Makefile                                           :+:      :+:    :+:    #
-#                                                     +:+ +:+         +:+      #
-#    By: lfiuza <marvin@42.fr>                      +#+  +:+       +#+         #
-#                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2018/07/12 12:51:27 by lfiuza            #+#    #+#              #
-#    Updated: 2018/07/12 20:01:31 by lfiuza           ###   ########.fr        #
-#                                                                              #
-# **************************************************************************** #
-
 NAME = calc
+FLAGS = -Wall -Wextra -Werror
+CC = gcc
+SRCS = main.c parse.c ft_helpers.c
+OUT = main.o parse.o ft_helpers.o
 
 all: $(NAME)
 
 $(NAME):
-		@gcc -Wall -Wextra -Werror -o $(NAME) big_num.c
+		@$(CC) libft/libft.a -I ./ $(SRCS) -o $(NAME)
 
 clean:
-		@/bin/rm -f
+		/bin/rm -f $(OUT)
 
 fclean: clean
-		@/bin/rm -f $(NAME)
+		/bin/rm -f $(NAME)
 
 re: fclean all
+
