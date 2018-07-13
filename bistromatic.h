@@ -16,7 +16,8 @@ typedef struct  s_result
     struct s_result *next;
 }               t_result;
 
-int     parse_expression(int expr_size, char *expr);
-void    read_expression(int expr_size);
+char    *read_expression(int expr_size);
+int     begin_parse(char *base, int expr_size);
+int     ft_atoi(const char *str);     
 
 #endif
