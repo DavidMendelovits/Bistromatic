@@ -1,6 +1,10 @@
 #ifndef BISTROMATIC_H
 # define BISTROMATIC_H
 
+#include <unistd.h>
+#include <stdlib.h>
+#include <stdio.h>
+
 typedef struct  s_equ
 {
     char            *ptr_a;
@@ -19,5 +23,9 @@ typedef struct  s_result
 char    *read_expression(int expr_size);
 int     begin_parse(char *base, int expr_size);
 int     ft_atoi(const char *str);     
+char	*ft_strdup(const char *s1);
+void	*ft_memalloc(size_t size);
+void	*ft_memset(void *b, int c, size_t len);
+int		ft_strlen(const char *str);
 
 #endif
