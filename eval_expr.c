@@ -6,7 +6,7 @@
 /*   By: dmendelo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/07/13 00:47:33 by dmendelo          #+#    #+#             */
-/*   Updated: 2018/07/13 01:24:03 by dmendelo         ###   ########.fr       */
+/*   Updated: 2018/07/13 21:41:06 by dmendelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,13 @@ char	*parse_expr(char *expr, char *base)
 	int		j;
 
 	i = -1;
-	while (expr[++i] != '0')
+	while (expr[++i] != '\0')
 	{
 		if (expr[i] == ' ')
-			i++;
+			continue ;
 		if (expr[i] == '(' || expr[i] == ')')
 		{
-			printf(CYN "%c", expr[i]);
+			printf(RED "%c", expr[i]);
 			continue ;
 		}
 			if (is_op(expr[i]))
@@ -38,6 +38,7 @@ char	*parse_expr(char *expr, char *base)
 			continue ;
 		}
 	}
+	printf("\n" RESET);
 	return (expr);
 }
 
