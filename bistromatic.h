@@ -9,6 +9,7 @@
 #include <sys/types.h>
 
 #define SYNTAX_ERROR "Invalid Syntax\n"
+#define OP "^*/+-"
 
 typedef struct			s_stack
 {

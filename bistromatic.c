@@ -50,6 +50,54 @@ char                *read_input(char *base, int input_size)
     return (input);
 }
 
+
+int                 is_op(char c)
+{
+    if (c == '+' || c == '-' || c == '/' || c == '*' || c == '%')
+    {
+        return (1);
+    }
+    return (0);
+}
+
+int                 is_nbr(char c, char *base)
+{
+    int             bp;
+
+    bp = 0;
+    while (base[bp])
+    {
+        if (base[bp] == c)
+        {
+            return (1);
+        }
+        bp += 1;
+    }
+    return (0);
+}
+
+int                 is_parenthesis(char c)
+{
+    if (c == '(' || c == ')')
+    {
+        return (1);
+    }
+    return (0);
+}
+
+
+void                push_op_stack(t_stack *op, char c)
+{
+    op->stack[op->sp] = c;
+    op->sp += 1;
+}
+
+void                push_output_stack(t_stack *output, char c, char *base)
+{
+    output->stack[output->sp] = c;
+    output->sp += 1;
+}
+
 void				solve(char *base, char *input, int input_len)
 {
 	t_stack			operators;
@@ -63,18 +111,18 @@ void				solve(char *base, char *input, int input_len)
 	{
 		if (is_op(input[ip]))
 		{
-			push_op_value(&operators, input[ip]);
+			push_op_stack(&operators, input[ip]);
 		}
 		else if (is_nbr(input[ip], base))
 		{
-			push_nbr_value(&output, input[ip], base);
+			push_output_stack(&output, input[ip], base);
 		}
 		else if (is_parenthesis(input[ip]))
 		{
-			push_op_value(&operators, input[ip]);
+			push_op_stack(&operators, input[ip]);
 		}
+        ip += 1;
 	}
-
 }
 
 int                 bistromatic(char *base, int input_size)
