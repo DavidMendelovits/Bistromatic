@@ -147,7 +147,9 @@ void                push_nbr_output(t_stack *output, char *input, int *p, char *
 	output->is_string = 1;
 	output->next = (t_stack*)malloc(sizeof(t_stack));
 	output->next->prev = output;
+    b_printf("%s\n", (char*)output->next->prev->data);
 	output = output->next;
+    b_printf("%s\n", (char*)output->prev->data);
 }
 
 void				init_output_stack(t_stack *output)
@@ -169,28 +171,30 @@ void                print_op_stack(t_op operators)
     }
 }
 
-void                print_output_stack(t_stack output)
+void                print_output_stack(t_stack *output)
 {
     b_printf("function -> print_output_stack\n");
-    while (output.prev)
+    b_printf("%s\n", (char*)output->data);
+    if (output->prev)
     {
-        printf("data = %s\n", (char*)output.data);
-        output = *output.prev;
+        output = output->prev;
+        print_output_stack(output);
     }
 }
 
 void				solve(char *base, char *input, int input_len)
 {
-	t_stack			output;
+	t_stack			*output;
     t_op            operators;
 	int				ip;
 
 	b_printf("function -> solve\n");
 	operators.sp = 0;
 	ip = 0;
-	init_output_stack(&output);
 	input_len += 1;
-	while (input[ip])
+    output = malloc(sizeof(t_stack));	
+	init_output_stack(output);
+    while (input[ip])
 	{
 		if (is_op(input[ip]))
 		{
@@ -200,7 +204,8 @@ void				solve(char *base, char *input, int input_len)
 		else if (is_nbr(input[ip], base))
 		{
 			b_printf("input[%d] is number...\n", ip);
-			push_nbr_output(&output, input, &ip, base);
+			push_nbr_output(output, input, &ip, base);
+      //      b_printf("%s\n", (char *)output->prev->data);
 		}
 		else if (is_parenthesis(input[ip]))
 		{
