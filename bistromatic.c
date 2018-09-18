@@ -89,9 +89,9 @@ int                 is_priority(int op1, int op2)
 
 int                 is_op(char c)
 {
-    b_printf("function -> char %c is_op\n", c);
     if (c == '+' || c == '-' || c == '/' || c == '*' || c == '%')
     {
+        b_printf("function -> char %c is_op\n", c);
         return (1);
     }
     return (0);
@@ -162,6 +162,7 @@ void				push_nbr_front(t_stack **head, char *input, int *p, char *base)
 	{
 		b_printf("head exists\n");
 		(*head)->prev = new;
+        new->next = *head;
 	}
 	*head = new;
 }
@@ -210,9 +211,15 @@ void                print_op_stack(t_op operators)
 
 void                print_output_stack(t_stack *output)
 {
-    b_printf("function -> print_output_stack\n");
-    b_printf("%s\n", (char*)output->data);
-    if (output->next)
+    static int          run = 0;
+    if (run == 0)
+    {
+        b_printf("function -> print_output_stack\n");
+        run = 1;
+    }
+ //   if (output->data)
+        b_printf("%s\n", (char*)output->data);
+    if (output->next != NULL)
     {
         output = output->next;
         print_output_stack(output);
@@ -229,8 +236,9 @@ void				solve(char *base, char *input, int input_len)
 	operators.sp = 0;
 	ip = 0;
 	input_len += 1;
-    output = malloc(sizeof(t_stack));	
-	init_output_stack(output);
+    output = NULL;
+//  output = malloc(sizeof(t_stack));	
+//	init_output_stack(output);
     while (input[ip])
 	{
 		if (is_op(input[ip]))
@@ -242,8 +250,6 @@ void				solve(char *base, char *input, int input_len)
 		{
 			b_printf("input[%d] is number...\n", ip);
 			push_nbr_front(&output, input, &ip, base);
-			print_output_stack(output);
-      //      b_printf("%s\n", (char *)output->prev->data);
 		}
 		else if (is_parenthesis(input[ip]))
 		{
