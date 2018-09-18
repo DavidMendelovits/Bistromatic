@@ -11,7 +11,7 @@ all: $(NAME)
 $(NAME):
 	@make -C libft/
 	@gcc $(CFLAGS) -c $(SRC) -I libft/ -I $(NAME)
-	@gcc $(OBJ) libft/libft.a -o $(NAME)
+	@gcc -g $(OBJ) libft/libft.a -o $(NAME)
 
 clean:
 	rm -rf $(OBJ)
