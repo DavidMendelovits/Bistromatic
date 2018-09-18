@@ -10,6 +10,12 @@
 
 #define SYNTAX_ERROR "Invalid Syntax\n"
 
+typedef struct			s_stack
+{
+	int				stack[1024];
+	int				sp;
+}						t_stack;
+
 int                     bistromatic(char *base, int input_size);
 char                    *read_input(char *base, int input_size);
 

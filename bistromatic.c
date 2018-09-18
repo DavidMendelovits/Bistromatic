@@ -2,14 +2,17 @@
 
 int                 is_valid_char(char *base, char _char)
 {
-    while (base)
+	int						i;
+
+	i = 0;
+    while (base[i])
     {
-        if (_char == *base)
+        if (_char == base[i])
         {
             return (1);
         }
-        b_printf("base = %c\n", *base);
-        base += 1;
+        b_printf("base = %c\n", base[i]);
+        i += 1;
     }
     if (_char == '(' || _char == ')' || _char == '+' || _char == '-' ||
         _char == '/' || _char == '*' || _char == '%')
@@ -47,6 +50,33 @@ char                *read_input(char *base, int input_size)
     return (input);
 }
 
+void				solve(char *base, char *input, int input_len)
+{
+	t_stack			operators;
+	t_stack			output;
+	int				ip;
+
+	operators.sp = 0;
+	output.sp = 0;
+	ip = 0;
+	while (input[ip])
+	{
+		if (is_op(input[ip]))
+		{
+			push_op_value(&operators, input[ip]);
+		}
+		else if (is_nbr(input[ip], base))
+		{
+			push_nbr_value(&output, input[ip], base);
+		}
+		else if (is_parenthesis(input[ip]))
+		{
+			push_op_value(&operators, input[ip]);
+		}
+	}
+
+}
+
 int                 bistromatic(char *base, int input_size)
 {
     char                *input;
@@ -57,6 +87,8 @@ int                 bistromatic(char *base, int input_size)
         write(2, SYNTAX_ERROR, ft_strlen(SYNTAX_ERROR));
         return (0);
     }
+	solve(base, input, input_size);
+
     
 
 
