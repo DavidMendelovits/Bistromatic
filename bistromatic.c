@@ -89,6 +89,7 @@ int                 is_priority(int op1, int op2)
 
 int                 is_op(char c)
 {
+    b_printf("function -> char %c is_op\n", c);
     if (c == '+' || c == '-' || c == '/' || c == '*' || c == '%')
     {
         return (1);
@@ -140,7 +141,8 @@ void                push_nbr_output(t_stack *output, char *input, int *p, char *
 	{
 		*p += 1;
 	}
-	output->data = ft_strdup_range(input, begin, *p - 1);
+    *p -= 1;
+	output->data = ft_strdup_range(input, begin, *p);
 	b_printf("number pushed to stack = %s\n", (char*)output->data);
 	output->is_string = 1;
 	output->next = (t_stack*)malloc(sizeof(t_stack));
@@ -155,6 +157,26 @@ void				init_output_stack(t_stack *output)
 	output->prev = NULL;
 	output->is_string = 0;
 	output->is_op = 0;
+}
+
+void                print_op_stack(t_op operators)
+{
+    b_printf("function -> print_op_stack\n");
+    while (operators.sp >= 0)
+    {
+        b_printf("%c\n", (char)operators.stack[operators.sp]);
+        operators.sp -= 1;
+    }
+}
+
+void                print_output_stack(t_stack output)
+{
+    b_printf("function -> print_output_stack\n");
+    while (output.prev)
+    {
+        printf("data = %s\n", (char*)output.data);
+        output = *output.prev;
+    }
 }
 
 void				solve(char *base, char *input, int input_len)
@@ -187,6 +209,8 @@ void				solve(char *base, char *input, int input_len)
 		}
         ip += 1;
 	}
+    print_op_stack(operators);
+    print_output_stack(output);
 }
 
 int                 bistromatic(char *base, int input_size)
