@@ -9,15 +9,32 @@
 #include <sys/types.h>
 
 #define SYNTAX_ERROR "Invalid Syntax\n"
-#define OP "^*/+-"
+#define OP "()^*/+-"
 
 typedef struct			s_stack
 {
-	int				stack[1024];
-	int				sp;
+    void            *data;
+    int             is_string:1;
+    int             is_op:1;
+    int				sp;
+    struct s_stack  *next;
 }						t_stack;
 
+typedef enum e_op
+{
+    parenthesis,
+    exponent,
+    multiplication,
+    division,
+    addition,
+    subtraction,
+}
+int                     is_op(char c);
+int                     is_nbr(char c, char *base);
+int                     is_parenthesis(char c);
+void                    solve(char *base, char *input, int input_len);
 int                     bistromatic(char *base, int input_size);
+int                     is_valid_char(char *base, char _char);
 char                    *read_input(char *base, int input_size);
 
 #endif

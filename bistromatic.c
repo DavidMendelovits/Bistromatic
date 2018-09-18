@@ -4,7 +4,12 @@ int                 is_valid_char(char *base, char _char)
 {
 	int						i;
 
-	i = 0;
+	i = 0; 
+    if (_char == '(' || _char == ')' || _char == '+' || _char == '-' ||
+        _char == '/' || _char == '*' || _char == '%')
+    {
+        return (1);
+    }
     while (base[i])
     {
         if (_char == base[i])
@@ -13,11 +18,6 @@ int                 is_valid_char(char *base, char _char)
         }
         b_printf("base = %c\n", base[i]);
         i += 1;
-    }
-    if (_char == '(' || _char == ')' || _char == '+' || _char == '-' ||
-        _char == '/' || _char == '*' || _char == '%')
-    {
-        return (1);
     }
     return (0);
 }
@@ -50,6 +50,30 @@ char                *read_input(char *base, int input_size)
     return (input);
 }
 
+int                 is_priority(int op1, int op 2)
+{
+    if (op1 == parenthesis)
+    {
+        return (1);
+    }
+    else if (op1 == multiplication && op2 >= division)
+    {
+        return (0)
+    }
+    else if (op1 == division && op2 >= division)
+    {
+        return (0);
+    }
+    else if (op1 == addition && op2 >= subtraction)
+    {
+        return (0)
+    }
+    else if (op1 == subtraction && op2 >= subtraction)
+    {
+        return (0);
+    }
+    return (1);
+}
 
 int                 is_op(char c)
 {
@@ -100,8 +124,8 @@ void                push_output_stack(t_stack *output, char c, char *base)
 
 void				solve(char *base, char *input, int input_len)
 {
-	t_stack			operators;
 	t_stack			output;
+    int             operators[1024];
 	int				ip;
 
 	operators.sp = 0;
@@ -115,6 +139,7 @@ void				solve(char *base, char *input, int input_len)
 		}
 		else if (is_nbr(input[ip], base))
 		{
+            get_nbr(input, ip, base);
 			push_output_stack(&output, input[ip], base);
 		}
 		else if (is_parenthesis(input[ip]))
