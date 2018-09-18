@@ -46,8 +46,12 @@ char                    *read_input(char *base, int input_size);
 void					init_output_stack(t_stack *output);
 
 
-void					push_nbr_output(t_stack *output, char *input, int *p, char *base);
+void					push_nbr_front(t_stack **head, char *input, int *p, char *base);
 void					push_op_stack(t_op *op, char c);
+
+
+void                	print_output_stack(t_stack *output);
+void                	print_op_stack(t_op operators);
 
 void                    solve(char *base, char *input, int input_len);
 int                     bistromatic(char *base, int input_size);

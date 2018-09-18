@@ -6,7 +6,7 @@
 /*   By: dmendelo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/18 07:50:45 by dmendelo          #+#    #+#             */
-/*   Updated: 2018/09/18 08:27:59 by dmendelo         ###   ########.fr       */
+/*   Updated: 2018/09/18 13:09:52 by dmendelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,42 @@ void                push_op_stack(t_op *op, char c)
 	op->sp += 1;
 }
 
+
+char				*extract_number(char *input, int *p, char *base)
+{
+	int				begin;
+	char			*number;
+
+	begin = *p;
+	while (is_nbr(input[*p], base))
+	{
+		*p += 1;
+	}
+	*p -= 1;
+	number = ft_strdup_range(input, begin, *p);
+	return (number);
+}
+
+void				push_nbr_front(t_stack **head, char *input, int *p, char *base)
+{
+	t_stack			*new;
+
+	b_printf("function -> push_nbr_front\n");
+	new = (t_stack *)malloc(sizeof(t_stack));
+	new->data = (void *)extract_number(input, p, base);
+	b_printf("\nnumber extracted = %s\n", (char *)new->data);
+	new->is_string = 1;
+	new->is_op = 0;
+	new->prev = NULL;
+	if (*head)
+	{
+		b_printf("head exists\n");
+		(*head)->prev = new;
+	}
+	*head = new;
+}
+
+/*
 void                push_nbr_output(t_stack *output, char *input, int *p, char *base)
 {
 	int				begin;
@@ -148,9 +184,11 @@ void                push_nbr_output(t_stack *output, char *input, int *p, char *
 	output->next = (t_stack*)malloc(sizeof(t_stack));
 	output->next->prev = output;
     b_printf("%s\n", (char*)output->next->prev->data);
+	print_output_stack(output);
 	output = output->next;
-    b_printf("%s\n", (char*)output->prev->data);
+
 }
+*/
 
 void				init_output_stack(t_stack *output)
 {
@@ -164,10 +202,9 @@ void				init_output_stack(t_stack *output)
 void                print_op_stack(t_op operators)
 {
     b_printf("function -> print_op_stack\n");
-    while (operators.sp >= 0)
+    while (--operators.sp >= 0)
     {
         b_printf("%c\n", (char)operators.stack[operators.sp]);
-        operators.sp -= 1;
     }
 }
 
@@ -175,9 +212,9 @@ void                print_output_stack(t_stack *output)
 {
     b_printf("function -> print_output_stack\n");
     b_printf("%s\n", (char*)output->data);
-    if (output->prev)
+    if (output->next)
     {
-        output = output->prev;
+        output = output->next;
         print_output_stack(output);
     }
 }
@@ -204,7 +241,8 @@ void				solve(char *base, char *input, int input_len)
 		else if (is_nbr(input[ip], base))
 		{
 			b_printf("input[%d] is number...\n", ip);
-			push_nbr_output(output, input, &ip, base);
+			push_nbr_front(&output, input, &ip, base);
+			print_output_stack(output);
       //      b_printf("%s\n", (char *)output->prev->data);
 		}
 		else if (is_parenthesis(input[ip]))
