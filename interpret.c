@@ -96,6 +96,10 @@ void				solve(char *base, char *input, int input_len)
 		}
         ip += 1;
 	}
+    if (operators.sp)
+    {
+        push_op_front(&output, &operators);
+    }
     print_op_stack(operators);
     print_output_stack(output);
 }
