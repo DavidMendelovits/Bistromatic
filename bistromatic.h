@@ -28,12 +28,13 @@ typedef struct			s_op
 
 typedef enum e_operators
 {
-    parenthesis,
-    exponent,
-    multiplication,
-    division,
+    subtraction,
     addition,
-    subtraction
+	mod,
+	division,
+    multiplication,
+    exponent,
+    parenthesis,
 }			t_operators;
 
 int                     is_op(char c);

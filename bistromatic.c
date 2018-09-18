@@ -6,7 +6,7 @@
 /*   By: dmendelo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/18 07:50:45 by dmendelo          #+#    #+#             */
-/*   Updated: 2018/09/18 13:09:52 by dmendelo         ###   ########.fr       */
+/*   Updated: 2018/09/18 14:35:13 by dmendelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,26 @@ int                 is_valid_char(char *base, char _char)
 {
 	int						i;
 
+	b_printf("function -> is_valid_char\n");
+	b_printf("_char = %c\n", _char);
 	i = 0; 
     if (_char == '(' || _char == ')' || _char == '+' || _char == '-' ||
-        _char == '/' || _char == '*' || _char == '%')
+        _char == '/' || _char == '*' || _char == '%' || _char == '^')
     {
+		b_printf("%c is valid char\n", _char);
         return (1);
     }
     while (base[i])
     {
         if (_char == base[i])
         {
+			b_printf("%c is valid char\n", _char);
             return (1);
         }
         b_printf("base = %c\n", base[i]);
         i += 1;
     }
+	b_printf("%c isn't valid char\n", _char);
     return (0);
 }
 
@@ -40,10 +45,12 @@ char                *read_input(char *base, int input_size)
     char                buffer[1024];
     int                 bp;
 
+	b_printf("function -> read_input\n");
     input = NULL;
     bp = 0;
-    while (read(2, &buffer[bp], 1))
+    while (read(0, &buffer[bp], 1))
     {
+		b_printf("%c\n", buffer[bp]);
         if (!is_valid_char(base, buffer[bp]))
         {
             break ;
@@ -68,14 +75,18 @@ int                 is_priority(int op1, int op2)
     {
         return (1);
     }
-    else if (op1 == multiplication && op2 >= division)
+    else if (op1 == multiplication && op2 >= mod)
     {
         return (0);
     }
-    else if (op1 == division && op2 >= division)
+    else if (op1 == division && op2 >= mod)
     {
         return (0);
     }
+	else if (op1 == mod && op2 >= mod)
+	{
+		return (0);
+	}
     else if (op1 == addition && op2 >= subtraction)
     {
         return (0);
@@ -89,12 +100,13 @@ int                 is_priority(int op1, int op2)
 
 int                 is_op(char c)
 {
-    if (c == '+' || c == '-' || c == '/' || c == '*' || c == '%')
+    if (c == '+' || c == '-' || c == '/' || c == '*' || c == '%' || c =='^')
     {
         b_printf("function -> char %c is_op\n", c);
         return (1);
     }
-    return (0);
+    
+	return (0);
 }
 
 int                 is_nbr(char c, char *base)
@@ -123,11 +135,47 @@ int                 is_parenthesis(char c)
 }
 
 
+int					extract_operator(char c)
+{
+	if (c == '(' || c ==')')
+	{
+		return (parenthesis);
+	}
+	else if (c == '^')
+	{
+		return (exponent);
+	}
+	else if (c == '*')
+	{
+		return (multiplication);
+	}
+	else if (c == '/')
+	{
+		return (division);
+	}
+	else if (c == '%')
+	{
+		return (mod);
+	}
+	else if (c == '+')
+	{
+		return (addition);
+	}
+	else if (c == '-')
+	{
+		return (subtraction);
+	}
+	return (-1);
+}
+
 void                push_op_stack(t_op *op, char c)
 {
+	int				_op;
+
+	_op = extract_operator(c);
 	b_printf("function -> push_op_stack\n");
-    op->stack[op->sp] = c; 
-	b_printf("op pushed to stack = %c\n", op->stack[op->sp]);
+    op->stack[op->sp] = _op; 
+	b_printf("op pushed to stack = %i\n", _op);
 	op->sp += 1;
 }
 
@@ -218,12 +266,38 @@ void                print_output_stack(t_stack *output)
         run = 1;
     }
  //   if (output->data)
-        b_printf("%s\n", (char*)output->data);
-    if (output->next != NULL)
+    if (output->is_string)
+	{
+		b_printf("%s\n", (char*)output->data);
+	}
+	else if (output->is_op)
+	{
+		b_printf("%d\n", (int)output->data);
+	}
+	if (output->next != NULL)
     {
         output = output->next;
         print_output_stack(output);
     }
+}
+
+void				push_op_front(t_stack **head, t_op *operators)
+{
+	t_stack			*new;
+
+	b_printf("function -> push_op_front\n");
+	new = (t_stack *)malloc(sizeof(t_stack));
+	new->data = malloc(sizeof(int));
+	new->data = (void *)(intptr_t)operators->stack[--operators->sp];
+	new->is_string = 0;
+	new->is_op = 1;
+	if (*head)
+	{
+		b_printf("head exists\n");
+		(*head)->prev = new;
+        new->next = *head;
+	}
+	*head = new;
 }
 
 void				solve(char *base, char *input, int input_len)
@@ -244,7 +318,16 @@ void				solve(char *base, char *input, int input_len)
 		if (is_op(input[ip]))
 		{
 			b_printf("input[%d] is operator...\n", ip);
-			push_op_stack(&operators, input[ip]);
+			if (operators.sp == 0  || is_priority(input[ip], operators.stack[operators.sp - 1]))
+			{	
+				push_op_stack(&operators, input[ip]);
+			}
+			else
+			{
+				push_op_front(&output, &operators);
+				push_op_stack(&operators, input[ip]);
+			}
+			print_op_stack(operators);
 		}
 		else if (is_nbr(input[ip], base))
 		{
