@@ -43,13 +43,17 @@ int                     is_parenthesis(char c);
 int						is_priority(int op1, int op2);
 int                     is_valid_char(char *base, char _char);
 
+
+int					    extract_operator(char c);
+char                    *extract_number(char *input, int *p, char *base);
+
 char                    *read_input(char *base, int input_size);
 void					init_output_stack(t_stack *output);
 
 
 void					push_nbr_front(t_stack **head, char *input, int *p, char *base);
-void					push_op_stack(t_op *op, char c);
-
+void					push_op_stack(t_op *op, int c);
+void				    push_op_front(t_stack **head, t_op *operators);
 
 void                	print_output_stack(t_stack *output);
 void                	print_op_stack(t_op operators);
