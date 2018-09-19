@@ -15,6 +15,7 @@
 int                 bistromatic(char *base, int input_size)
 {
     char                *input;
+    t_stack             *stack;
 
     input = read_input(base, input_size);
     if (!input)
@@ -22,11 +23,13 @@ int                 bistromatic(char *base, int input_size)
         write(2, SYNTAX_ERROR, ft_strlen(SYNTAX_ERROR));
         return (0);
     }
-	solve(base, input, input_size);
-
-    
-
-
+    stack = infix_postfix(input, base);
+    if (!stack)
+    {
+        write(2, SYNTAX_ERROR, ft_strlen(SYNTAX_ERROR));
+        return (0);
+    }
+    eval(stack);
     return (1);
 }
 

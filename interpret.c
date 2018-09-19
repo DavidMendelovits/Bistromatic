@@ -108,10 +108,12 @@ void				solve(char *base, char *input, int input_len)
 void                redirect_op(char *input, int ip, t_op *op, t_stack *output)
 {
     int             op_code;
+    b_printf("\nfunction -> redirect_op\n");
 
 	op_code = extract_operator(input[ip]);
-    while (op->sp > 0 && is_priority(op->stack[op->sp - 1], op_code))
+    while ((op->sp > 0 && !is_priority(op_code, op->stack[op->sp - 1])) && op->stack[op->sp] != '(')
 	{
+        b_printf("\n------------push op from stack to output\n");
 		push_op_front(&output, op);
 	}
 	push_op_stack(op, op_code);
@@ -186,6 +188,10 @@ void				solve(char *base, char *input, int input_len)
 		}
         ip += 1;
 	}
+    while (operators.sp >= 0 && operators.stack[operators.sp])
+    {
+        push_op_front(&output, &operators);
+    }
     if (operators.sp)
     {
         push_op_front(&output, &operators);
