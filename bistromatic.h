@@ -41,12 +41,20 @@ typedef enum e_operators
 int                     is_op(char c);
 int                     is_nbr(char c, char *base);
 
-
 int					    extract_operator(char c);
 char                    *extract_number(char *input, int *p, char *base);
 
 char                    *read_input(char *base, int input_size);
 void					init_output_stack(t_stack *output);
+
+t_stack					*infix_postfix(char *input, char *base);
+void					redirect_operator(char op, t_op *o, t_stack **head);
+void					push_op(t_op *o, char op);
+void					push_op_queue(t_stack **head, char op);
+char					pop_op(t_op *o);
+void					extract_operand(t_stack **head, char *input, int *p, char *base);
+void					push_operand(t_stack **head, char *operand);
+void					init_op_stack(t_op *o);
 
 void                	print_output_stack(t_stack *output);
 void                	print_op_stack(t_op operators);

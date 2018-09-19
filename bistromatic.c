@@ -6,7 +6,7 @@
 /*   By: dmendelo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/18 07:50:45 by dmendelo          #+#    #+#             */
-/*   Updated: 2018/09/18 14:35:13 by dmendelo         ###   ########.fr       */
+/*   Updated: 2018/09/19 13:09:22 by dmendelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int                 bistromatic(char *base, int input_size)
         write(2, SYNTAX_ERROR, ft_strlen(SYNTAX_ERROR));
         return (0);
     }
-    eval(stack);
+//    eval(stack);
     return (1);
 }
 
