@@ -43,6 +43,15 @@ void            pull_operand(t_stack **head, char *input, int *p, char *base)
     push_operand(head, ft_strdup_range(input, begin, *p));
 }
 
+void            redirect_operator(char _op, t_op *op)
+{
+    if (op->sp == 0 && op->stack[op->sp] == '\0')
+    {
+        push_op(&op, _op);
+    }
+
+}
+
 t_stack         *infix_postfix(char *input, char *base)
 {
     t_stack         *stack;
@@ -59,7 +68,7 @@ t_stack         *infix_postfix(char *input, char *base)
         }
         else if (is_nbr(input[ip]))
         {
-            pull_operand(&stack, input, &ip, base);
+            pull_operand(&stack, input, &ip, baseo);
         }
         else if (input[ip] == '(')
         {

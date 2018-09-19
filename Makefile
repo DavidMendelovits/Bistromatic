@@ -2,9 +2,9 @@ NAME = calc
 
 CFLAGS = -Wall -Wextra -Werror
 
-SRC = bistromatic.c checks.c read_input.c print_functions.c interpret.c 
+SRC = bistromatic.c checks.c read_input.c print_functions.c  
 
-OBJ = bistromatic.o checks.o read_input.o print_functions.o interpret.o 
+OBJ = bistromatic.o checks.o read_input.o print_functions.o  
 
 all: $(NAME)
 
