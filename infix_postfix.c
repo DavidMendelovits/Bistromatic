@@ -114,6 +114,23 @@ int				is_priority(char a1, char a2)
 	}
 	return (0);
 }
+
+int             is_empty(t_op *o)
+{
+    int             i;
+
+    i = o->sp;
+    while (i <= 0)
+    {
+        if (o->stack[i])
+        {
+            return (0);
+        }
+        i -= 1;
+    }
+    return (1);
+}
+
 /*
 ** top of the stack will be one less than current position?
 */
@@ -127,7 +144,7 @@ void            redirect_operator(char op, t_op *o, t_stack **head)
     }
 	else
 	{
-		while (is_full(o) && is_priority(o->stack[o->sp - 1], op))
+		while (!is_empty(o) && is_priority(o->stack[o->sp - 1], op))
 		{
 			tmp = pop_op(o);
 			push_op_queue(head, tmp);
@@ -146,13 +163,13 @@ t_stack         *infix_postfix(char *input, char *base)
     ip = 0;
     while (input[ip])
     {
-        if (is_operator(input[ip]))
+        if (is_op(input[ip]))
         {
             redirect_operator(input[ip], &op, &stack);
         }
-        else if (is_nbr(input[ip]))
+        else if (is_nbr(input[ip], base))
         {
-            extract_operand(&stack, input, &ip, baseo);
+            extract_operand(&stack, input, &ip, base);
         }
         else if (input[ip] == '(')
         {
@@ -160,7 +177,7 @@ t_stack         *infix_postfix(char *input, char *base)
         }
         else if (input[ip] == ')')
         {
-            push_paren_contents(&stack, &op)
+            push_paren_contents(&stack, &op);
         }
         ip += 1;
     }

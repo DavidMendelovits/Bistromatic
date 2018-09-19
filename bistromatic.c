@@ -29,6 +29,7 @@ int                 bistromatic(char *base, int input_size)
         write(2, SYNTAX_ERROR, ft_strlen(SYNTAX_ERROR));
         return (0);
     }
+    print_output_stack(stack);
 //    eval(stack);
     return (1);
 }
