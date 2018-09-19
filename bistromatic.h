@@ -20,6 +20,13 @@ typedef struct			s_stack
 	struct s_stack	*prev;
 }						t_stack;
 
+typedef struct			s_input
+{
+	char			*input;
+	int				ip;
+	int				priority; //for parenthesis?
+}						t_input;
+
 typedef struct			s_op
 {
 	int				stack[1024];
@@ -28,6 +35,7 @@ typedef struct			s_op
 
 typedef enum e_operators
 {
+	nil,
     subtraction,
     addition,
 	mod,

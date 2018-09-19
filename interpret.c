@@ -105,23 +105,45 @@ void				solve(char *base, char *input, int input_len)
 }
 */
 
-void                redirect_op(char *input, int ip, t_op *operators, t_stack *output)
+void                redirect_op(char *input, int ip, t_op *op, t_stack *output)
 {
     int             op_code;
 
-    b_printf("input[%d] is operator...\n", ip);
-    b_printf("operators.sp = %d\n", operators->sp);
 	op_code = extract_operator(input[ip]);
-    if (operators->sp == 0  || is_priority(op_code, operators->stack[operators->sp - 1]))
+    while (op->sp > 0 && is_priority(op->stack[op->sp - 1], op_code))
+	{
+		push_op_front(&output, op);
+	}
+	push_op_stack(op, op_code);
+	print_op_stack(*op);
+	/*
+	b_printf("input[%d] is operator...\n", ip);
+    b_printf("op.sp = %d\n", op->sp);
+    if (op->sp == 0  || is_priority(op_code, op->stack[op->sp - 1]))
 	{	
-		push_op_stack(operators, op_code);
+		push_op_stack(op, op_code);
 	}
 	else
 	{
-		push_op_front(&output, operators);
-		push_op_stack(operators, op_code);
+		push_op_front(&output, op);
+		push_op_stack(op, op_code);
+	}*/
+	print_op_stack(*op);
+}
+
+//void				shunting_yard(t_stack *output, t_op *operators, t_input *input)
+
+void				init_op_stack(t_op *op)
+{
+	int			i;
+
+	op->sp = 0;
+	i = 0;
+	while (i < 1024)
+	{
+		op->stack[i] = nil;
+		i += 1;
 	}
-	print_op_stack(*operators);
 }
 
 void				solve(char *base, char *input, int input_len)
@@ -133,7 +155,7 @@ void				solve(char *base, char *input, int input_len)
     int             priority;
 
 	b_printf("function -> solve\n");
-	operators.sp = 0;
+	init_op_stack(&operators);
 	ip = 0;
 	                input_len += 1;
     output = NULL;
@@ -152,9 +174,9 @@ void				solve(char *base, char *input, int input_len)
 		}
 		else if (is_parenthesis(input[ip]))
 		{
-            if (priority == 1 && input[ip] == ')')
+            if (priority >= 1 && input[ip] == ')')
             {
-                push_priority(&operators, &output);
+      //          push_priority(&operators, &output);
                 priority -= 1;
             }
 			b_printf("input[%d] is parenthesis\n");

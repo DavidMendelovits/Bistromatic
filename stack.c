@@ -46,6 +46,7 @@ void				push_op_front(t_stack **head, t_op *operators)
 	new = (t_stack *)malloc(sizeof(t_stack));
 	new->data = malloc(sizeof(int));
 	new->data = (void *)(intptr_t)operators->stack[--operators->sp];
+	operators->stack[operators->sp--] = nil;
 	new->is_string = 0;
 	new->is_op = 1;
 	if (*head)
