@@ -28,7 +28,7 @@ void                print_output_stack(t_stack *output)
 	}
 	else if (output->is_op)
 	{
-		b_printf("%u\n", (intptr_t)output->data);
+		b_printf("%s\n", (char*)output->data);
 	}
 	if (output->next != NULL)
     {
