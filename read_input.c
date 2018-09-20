@@ -2,7 +2,7 @@
 
 int                 is_valid_char(char *base, char _char)
 {
-    if (is_op(_char) || is_nbr(_char, base))
+    if (is_op(_char) || is_nbr(_char, base) || _char == '(' || _char == ')')
     {
         return (1);
     }

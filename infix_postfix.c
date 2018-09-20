@@ -6,7 +6,7 @@
 /*   By: dmendelo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/19 16:49:40 by dmendelo          #+#    #+#             */
-/*   Updated: 2018/09/19 18:07:56 by dmendelo         ###   ########.fr       */
+/*   Updated: 2018/09/19 18:26:16 by dmendelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,16 +37,13 @@ void            push_operand(t_stack **head, char *operand)
     tmp->is_string = 1;
     tmp->is_op = 0;
     tmp->prev = NULL;
-   	printf("still works\n");	
     if (*head)
     {
     	tmp->next = (*head);
-     
-   	printf("still works\n");	
+		printf("1\n");
 	 	(*head)->prev = tmp;
-
-   	printf("still works\n");	
-    }
+    	printf("2\n");
+	}
 	else
 	{
 		tmp->next = NULL;
@@ -229,6 +226,7 @@ t_stack         *infix_postfix(char *input, char *base)
     printf("\nfunction -> infix_postfix\n");
 	init_op_stack(&op);
     ip = 0;
+	stack = NULL;
     while (input[ip])
     {
         if (is_op(input[ip]))
