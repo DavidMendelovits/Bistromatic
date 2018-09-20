@@ -26,18 +26,6 @@ typedef struct			s_op
 	int				sp;
 }						t_op;
 
-typedef enum e_operators
-{
-	nil,
-    subtraction,
-    addition,
-	mod,
-	division,
-    multiplication,
-    exponent,
-    parenthesis,
-}			t_operators;
-
 int                     is_op(char c);
 int                     is_nbr(char c, char *base);
 
@@ -55,6 +43,11 @@ char					pop_op(t_op *o);
 void					extract_operand(t_stack **head, char *input, int *p, char *base);
 void					push_operand(t_stack **head, char *operand);
 void					init_op_stack(t_op *o);
+int						empty_operator_stack(t_op *o, t_stack **head);
+int						is_empty(t_op *o);
+int						is_priority(char a1, char a2);
+void					push_parent_contents(t_stack **head, t_op *o);
+char					*ft_chardup(char _c);
 
 void                	print_output_stack(t_stack *output);
 void                	print_op_stack(t_op operators);
