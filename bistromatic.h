@@ -37,16 +37,20 @@ void					init_output_stack(t_stack *output);
 
 t_stack					*infix_postfix(char *input, char *base);
 void					redirect_operator(char op, t_op *o, t_stack **head);
+
 void					push_op(t_op *o, char op);
 void					push_op_queue(t_stack **head, char op);
 char					pop_op(t_op *o);
+void					init_op_stack(t_op *o);
+
 void					extract_operand(t_stack **head, char *input, int *p, char *base);
 void					push_operand(t_stack **head, char *operand);
-void					init_op_stack(t_op *o);
+
+
 int						empty_operator_stack(t_op *o, t_stack **head);
 int						is_empty(t_op *o);
 int						is_priority(char a1, char a2);
-void					push_parent_contents(t_stack **head, t_op *o);
+int						push_paren_contents(t_stack **head, t_op *o);
 char					*ft_chardup(char _c);
 
 void                	print_output_stack(t_stack *output);
