@@ -1,10 +1,12 @@
 //#include "bistromatic.h"
 #include "libft/libft.h"
+#include <stdio.h>
 
-void            *pad_string_zero(char **str, int pad, char zero)
+void            pad_string_zero(char **str, int pad, char zero)
 {
-    printf("->%s\n", "__func__");
+    printf("->%s\n", __func__);
     char            *tmp;
+    char            *_free;
     int             sp;
     int             tp;
 
@@ -17,20 +19,65 @@ void            *pad_string_zero(char **str, int pad, char zero)
         pad -= 1;
         tp += 1;
     }
-    while (str[sp])
+    while ((*str)[sp])
     {
         tmp[tp] = (*str)[sp];
         tp += 1;
         sp += 1;
     }
     tmp[tp] = '\0';
-    free(*str);
+    _free = *str;
+    free(_free);
     *str = tmp;
+}
+
+int             get_num(char n, char *base)
+{
+
+}
+
+char            operate(char _a, char _b, char *base, int *carry)
+{
+    int         a;
+    int         b;
+    int         c;
+    char        _c;
+    int         base_len;
+
+    a = get_num(_a, base);
+    b = get_num(_b, base);
+    c = a + b;
+    base_len = ft_strlen(base);
+    if (c > base_len)
+    {
+        *carry = c % base_len;
+        c /= base_len;
+    }
+    _c = base[c];
+    return (_c);
+}
+
+char            *add(char *o1, char *o2, char *base)
+{
+    char        *sum;
+    char        extra[1024];
+    int         p;
+    int         sp;
+    int         carry;
+    
+    p = ft_strlen(o1) - 1;
+    sum = (char *)ft_memalloc(sizeof(char) * (p + 2));
+    sp = 0;
+    while (p >= 0)
+    {
+        sum[sp] = operate(o1[p], o2[p], base, &carry);
+    }
+    return (sum);
 }
 
 char            *addition(char *o1, char *o2, char *base)
 {
-    printf("->%s\n", "__func__");
+    printf("->%s\n", __func__);
     int             p1;
     int             p2;
     char            *sum;
@@ -45,15 +92,16 @@ char            *addition(char *o1, char *o2, char *base)
     {
         pad_string_zero(&o2, p1 - p2, base[0]);
     }
-    printf("%s\n%s\n", o1, o2);
-    return (sum);
+    printf("%s\n%s\n", o1, o2, base);
+    sum = add(o1, o2, base);
+    return (NULL);
 }
 
 int             main(int argc, char **argv)
 {
-    if (argc == 2)
+    if (argc == 3)
     {
-        addition(argv[1], argv[2], "0123456789");
+        addition(ft_strdup(argv[1]), ft_strdup(argv[2]), "0123456789");
     }
     return (0);
 }
