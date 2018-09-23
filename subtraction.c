@@ -16,8 +16,20 @@
 
 char			*subtract(char *o1, char *o2, char *base)
 {
+    WOW();
 	char		*dif;
-	char		
+	int         p;
+    int         dp;
+    int         borrow;
+
+    p = ft_strlen(o1) - 1;
+    dif = (char *)ft_memalloc(sizeof(char) * (p + 2));
+    dp = 0;
+    borrow = 0;
+    while (p >= 0)
+    {
+        dif[dp] = perform(o1[p], o2[p], base, &borrow);
+    }
 }
 
 char			*subtraction(char *o1, char *o2, char *base)
