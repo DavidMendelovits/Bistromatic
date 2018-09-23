@@ -6,7 +6,7 @@
 /*   By: dmendelo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/22 18:34:16 by dmendelo          #+#    #+#             */
-/*   Updated: 2018/09/22 19:11:10 by dmendelo         ###   ########.fr       */
+/*   Updated: 2018/09/23 11:13:02 by dmendelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,6 @@ void            pad_string_zero(char **str, int pad, char zero)
         sp += 1;
     }
     tmp[tp] = '\0';
-    _free = *str;
-    free(_free);
     *str = tmp;
 }
 
@@ -68,7 +66,6 @@ char            operate(char _a, char _b, char *base, int *carry)
     int         c;
     char        _c;
     int         base_len;
-    char        extra;
 
     a = get_num(_a, base);
     b = get_num(_b, base);
@@ -83,7 +80,6 @@ char            operate(char _a, char _b, char *base, int *carry)
     }
     else
     {
-    char        extra;
         *carry = 0;
     }
     b_printf("c mod base: %d\n", c);
@@ -141,13 +137,4 @@ char            *addition(char *o1, char *o2, char *base)
     printf("%s\n%s\n", o1, o2);
     sum = add(o1, o2, base);
     return (sum);
-}
-
-int             main(int argc, char **argv)
-{
-    if (argc == 3)
-    {
-        b_printf("%s\n", addition(ft_strdup(argv[1]), ft_strdup(argv[2]), "0123456789"));
-    }
-    return (0);
 }

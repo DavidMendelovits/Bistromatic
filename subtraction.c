@@ -6,13 +6,54 @@
 /*   By: dmendelo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/22 19:03:59 by dmendelo          #+#    #+#             */
-/*   Updated: 2018/09/22 19:10:52 by dmendelo         ###   ########.fr       */
+/*   Updated: 2018/09/23 13:37:41 by dmendelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include "libft/libft.h"
 #define WOW() printf("->%s\n", __func__);
+
+char			get_dif(char _a, char _b, char *base, int *borrow)
+{
+	WOW();
+	int			a;
+	int			b;
+	int			c;
+	char		_c;
+	int			base_len;
+
+	a = get_num(_a, base);
+	b = get_num(_b, base);
+	c = a - b - *borrow;
+	printf("%d - %d - (%d)\n", a, b, *borrow);
+	printf("dif (c): %d\n", c);
+	base_len = ft_strlen(base);
+	if (c < 0)
+	{
+		*borrow = 1;
+		c += base_len;
+	}
+	else
+	{
+		*borrow = 0;
+	}
+	b_printf("borrow: %d\n", *borrow);
+	b_printf("c: %d\n", c);
+	b_printf("_c = base[%d] (%c)\n", c, base[c]);
+	_c = base[c];
+	return (_c);
+	
+}
+
+void			swap_strings(char **a, char **b)
+{
+	char		*tmp;
+
+	tmp = *a;
+	*a = *b;
+	*b = tmp;
+}
 
 char			*subtract(char *o1, char *o2, char *base)
 {
@@ -21,15 +62,32 @@ char			*subtract(char *o1, char *o2, char *base)
 	int         p;
     int         dp;
     int         borrow;
+	int			sign;
 
     p = ft_strlen(o1) - 1;
-    dif = (char *)ft_memalloc(sizeof(char) * (p + 2));
+    dif = (char *)ft_memalloc(sizeof(char) * (p + 3));
     dp = 0;
     borrow = 0;
+	if (strcmp(o1, o2) < 0)
+	{
+		swap_strings(&o1, &o2);
+		sign = -1;
+    	b_printf("%s\n%s\n", o1, o2);
+	}
     while (p >= 0)
     {
-        dif[dp] = perform(o1[p], o2[p], base, &borrow);
+        dif[dp] = get_dif(o1[p], o2[p], base, &borrow);
+		dp += 1;
+		p -= 1;
     }
+	if (sign == -1)
+	{
+		dif[dp++] = '-';
+	}
+	if (dp)
+		ft_strrev(dif);
+	b_printf("difference: %s\n", dif);
+	return (dif);
 }
 
 char			*subtraction(char *o1, char *o2, char *base)
@@ -47,9 +105,18 @@ char			*subtraction(char *o1, char *o2, char *base)
 	}
 	if (p2 < p1)
 	{
-		pad_string_zero(&o1, p2 - p1, base[0]);
+		pad_string_zero(&o2, p1 - p2, base[0]);
 	}
-    printf("%s\n%s\n", o1, o2, base);
-	difference = substract(o1, o2, base);
+    b_printf("%s\n%s\n", o1, o2);
+	difference = subtract(o1, o2, base);
 	return (difference);
+}
+
+int				main(int argc, char **argv)
+{
+    if (argc == 3)
+    {
+        b_printf("%s\n", subtraction(ft_strdup(argv[1]), ft_strdup(argv[2]), "0123456789"));
+    }
+	return (0);
 }
