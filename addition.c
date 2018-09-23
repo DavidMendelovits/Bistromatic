@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   addition.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dmendelo <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/09/22 18:34:16 by dmendelo          #+#    #+#             */
+/*   Updated: 2018/09/22 19:11:10 by dmendelo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 //#include "bistromatic.h"
 #include "libft/libft.h"
 #include <stdio.h>
@@ -33,7 +45,18 @@ void            pad_string_zero(char **str, int pad, char zero)
 
 int             get_num(char n, char *base)
 {
+	int			p;
 
+	p = 0;
+	while (base[p])
+	{
+		if (base[p] == n)
+		{
+			return (p);
+		}
+		p += 1;
+	}
+	return (p);
 }
 
 char            operate(char _a, char _b, char *base, int *carry)
@@ -46,7 +69,7 @@ char            operate(char _a, char _b, char *base, int *carry)
 
     a = get_num(_a, base);
     b = get_num(_b, base);
-    c = a + b;
+    c = a + b + *carry;
     base_len = ft_strlen(base);
     if (c > base_len)
     {
@@ -68,10 +91,15 @@ char            *add(char *o1, char *o2, char *base)
     p = ft_strlen(o1) - 1;
     sum = (char *)ft_memalloc(sizeof(char) * (p + 2));
     sp = 0;
+	carry = 0;
     while (p >= 0)
     {
-        sum[sp] = operate(o1[p], o2[p], base, &carry);
+		sum[sp] = operate(o1[p], o2[p], base, &carry);
+		sp += 1;
+		p -= 1;
     }
+	ft_strrev(sum);
+	printf("sum = %s\n", sum);
     return (sum);
 }
 
@@ -88,7 +116,7 @@ char            *addition(char *o1, char *o2, char *base)
     {
         pad_string_zero(&o1, p2 - p1, base[0]);
     }
-    else if (p2 > p1)
+    else if (p2 < p1)
     {
         pad_string_zero(&o2, p1 - p2, base[0]);
     }
