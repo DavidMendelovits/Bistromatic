@@ -56,6 +56,17 @@ char					*ft_chardup(char _c);
 void                	print_output_stack(t_stack *output);
 void                	print_op_stack(t_op operators);
 
+char                    *addition(char *o1, char *o2, char *base);
+char                    *add(char *o1, char *o2, char *base);
+char                    operate(char _a, char _b, char *base, int *carry);
+int                     get_num(char n, char *base);
+void                    pad_string_zero(char **str, int pad, char *zero);
+
+char                    *subtraction(char *o1, char *o2, char *base);
+char                    *subtract(char *o1, char *o2, char *base);
+void                    swap_strings(char **a, char **b);
+char                    get_dif(char _a, char _b, char *base, int *borrow);
+
 void                    solve(char *base, char *input, int input_len);
 int                     bistromatic(char *base, int input_size);
 
