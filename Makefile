@@ -15,10 +15,12 @@ NAME = calc
 CFLAGS = -Wall -Wextra -Werror
 
 SRC = bistromatic.c checks.c read_input.c print_functions.c infix_postfix.c \
-	  helper_functions.c queue.c stack.c
+	  helper_functions.c queue.c stack.c rpn.c addition.c subtraction.c \
+	  multiplication.c
 
 OBJ = bistromatic.o checks.o read_input.o print_functions.o infix_postfix.o \
-	  helper_functions.o queue.o stack.o
+	  helper_functions.o queue.o stack.o rpn.o addition.o subtraction.o \
+	  multiplication.o
 
 all: $(NAME)
 

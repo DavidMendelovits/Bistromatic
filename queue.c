@@ -26,9 +26,7 @@ void            push_operand(t_stack **head, char *operand)
     if (*head)
     {
     	tmp->next = (*head);
-		printf("1\n");
 	 	(*head)->prev = tmp;
-    	printf("2\n");
 	}
 	else
 	{

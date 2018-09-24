@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include "libft/libft.h"
+#include "bistromatic.h"
+//#include "libft/libft.h"
 #define WOW() printf("->%s\n", __func__);
 
 char			get_dif(char _a, char _b, char *base, int *borrow)
@@ -68,7 +68,7 @@ char			*subtract(char *o1, char *o2, char *base)
     dif = (char *)ft_memalloc(sizeof(char) * (p + 3));
     dp = 0;
     borrow = 0;
-	if (strcmp(o1, o2) < 0)
+	if (ft_strcmp(o1, o2) < 0)
 	{
 		swap_strings(&o1, &o2);
 		sign = -1;
@@ -109,14 +109,6 @@ char			*subtraction(char *o1, char *o2, char *base)
 	}
     b_printf("%s\n%s\n", o1, o2);
 	difference = subtract(o1, o2, base);
+    printf("difference: %s\n", difference);
 	return (difference);
-}
-
-int				main(int argc, char **argv)
-{
-    if (argc == 3)
-    {
-        b_printf("%s\n", subtraction(ft_strdup(argv[1]), ft_strdup(argv[2]), "0123456789"));
-    }
-	return (0);
 }

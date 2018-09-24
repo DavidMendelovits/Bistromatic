@@ -30,7 +30,7 @@ int                 bistromatic(char *base, int input_size)
         return (0);
     }
     print_output_stack(stack);
-    eval(stack);
+    eval(stack, base);
     return (1);
 }
 

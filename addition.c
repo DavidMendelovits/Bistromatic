@@ -10,15 +10,15 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-//#include "bistromatic.h"
-#include "libft/libft.h"
-#include <stdio.h>
+#include "bistromatic.h"
+//#include "libft/libft.h"
+//#include <stdio.h>
 
 void            pad_string_zero(char **str, int pad, char zero)
 {
     printf("->%s\n", __func__);
     char            *tmp;
-    char            *_free;
+  //  char            *_free;
     int             sp;
     int             tp;
 
@@ -110,8 +110,7 @@ char            *add(char *o1, char *o2, char *base)
 		sp += 1;
 		p -= 1;
     }
-    if (carry)
-        sum[sp] = base[carry];
+    sum[sp] = base[carry];
 	ft_strrev(sum);
 	printf("sum = %s\n", sum);
     return (sum);
@@ -136,5 +135,6 @@ char            *addition(char *o1, char *o2, char *base)
     }
     printf("%s\n%s\n", o1, o2);
     sum = add(o1, o2, base);
+    printf("sum: %s\n", sum);
     return (sum);
 }
