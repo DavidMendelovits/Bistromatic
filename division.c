@@ -38,6 +38,31 @@ int				is_zero(char *num, char *base)
 	return (1);
 }
 
+char            *trim_zeros(char *num, char *base)
+{
+    FUNC();
+    char            *new;
+    int             i;
+    int             j;
+
+    num = ft_strrev(num);
+    i = 0;
+    while (num[i] != base[0])
+    {
+        i += 1;
+    }
+    new = (char *)ft_memalloc(sizeof(char) * (i + 1));
+    j = 0;
+    i -= 1;
+    while (i >= 0)
+    {
+        new[j] = num[i];
+        i -= 1;
+        j += 1
+    }
+    return (new);
+}
+
 char			*division(char *_o1, char *_o2, char *base)
 {
 	FUNC();
@@ -54,7 +79,11 @@ char			*division(char *_o1, char *_o2, char *base)
 		quotient = addition(quotient, ft_strdup_range(base, 1, 1), base);
 		printf("quotient: %s\n", quotient);
 	}
-
+    if (quotient[0] == base[0])
+    {
+        quotient = trim_zeros(quotient, base);
+    }
 	return (quotient);
+
 }
 
