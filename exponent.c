@@ -5,11 +5,13 @@ char                *iterate_power(char *o, int power, char *base)
 {
     FUNC();
     int             i;
+    char            *power_of;
     
     i = 1;
+    power_of = ft_strdup(o);
     while (i < power)
     {
-        o = multiplication(o, o, base);
+        o = multiplication(o, power_of, base);
         i += 1;
     }
     return (o);
