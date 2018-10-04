@@ -103,6 +103,10 @@ char                *multiplication(char *_o1, char *_o2, char *base)
     {
         sign = -1;
     }
+	else
+	{
+		sign = 1;
+	}
     init_o(&o1, _o1, base);
     init_o(&o2, _o2, base);
     printf("%s * %s\n", _o1, _o2);

@@ -87,6 +87,8 @@ char                    *iterate_power(char *o, int power, char *base);
 void                    eval(t_stack *queue, char *base);
 void                    do_op(t_stack **head, char operator, char *base);
 
+char					*division(char *_o1, char *_o2, char *base);
+int						is_positive(char *num);
 
 void                    solve(char *base, char *input, int input_len);
 int                     bistromatic(char *base, int input_size);
