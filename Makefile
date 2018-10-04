@@ -16,11 +16,11 @@ CFLAGS = -Wall -Wextra -Werror
 
 SRC = bistromatic.c checks.c read_input.c print_functions.c infix_postfix.c \
 	  helper_functions.c queue.c stack.c rpn.c addition.c subtraction.c \
-	  multiplication.c
+	  multiplication.c exponent.c
 
 OBJ = bistromatic.o checks.o read_input.o print_functions.o infix_postfix.o \
 	  helper_functions.o queue.o stack.o rpn.o addition.o subtraction.o \
-	  multiplication.o
+	  multiplication.o exponent.o
 
 all: $(NAME)
 

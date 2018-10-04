@@ -82,6 +82,8 @@ int                     *multiply(t_mult *o1, t_mult *o2, char *base);
 void                    iterate_multiply(int **prod, t_mult *o1, t_mult *o2);
 void                    init_o(t_mult *o, char *_o, char *base);
 
+char                    *exponent(char *o, char *_power, char *base);
+char                    *iterate_power(char *o, int power, char *base);
 void                    eval(t_stack *queue, char *base);
 void                    do_op(t_stack **head, char operator, char *base);
 

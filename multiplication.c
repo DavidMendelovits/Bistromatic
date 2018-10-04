@@ -50,6 +50,7 @@ int                *multiply(t_mult *o1, t_mult *o2, char *base)
         iterate_multiply(&product, o1, o2);
         o2->p += 1;
     }
+    i = 0;
     while (i < (o1->len + o2->len))
     {
         tmp = product[i] / radix;
@@ -82,7 +83,6 @@ char                *read_r_product(int *_prod, int len, char *base, int sign)
         p -= 1;
         i += 1;
     }
-
     return (prod);
 }
 
@@ -108,6 +108,5 @@ char                *multiplication(char *_o1, char *_o2, char *base)
     printf("%s * %s\n", _o1, _o2);
     r_product = multiply(&o1, &o2, base);
     product = read_r_product(r_product, o1.len + o2.len, base, sign);
-    printf("product: %s\n", product);
     return (product);
 }
