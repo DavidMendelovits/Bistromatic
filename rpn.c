@@ -7,6 +7,8 @@ char                *pop_operand(t_stack **head)
     char                *o;
     t_stack             *tmp;
 
+	if (!(*head))
+		return (0);
     o = ft_strdup((*head)->data);
     tmp = *head;
     *head = (*head)->next;
@@ -14,6 +16,7 @@ char                *pop_operand(t_stack **head)
     {
         (*head)->prev = NULL;
     }
+	free(tmp->data);
     free(tmp);
     return (o);
 }
@@ -31,11 +34,14 @@ void                do_op(t_stack **head, char operator, char *base)
     //result_sign = 1;
     printf("%s %c %s\n", o1, operator, o2);
     result = NULL;
+	if (!o1 || !o2)
+		return ;
     if (operator == '+' && o1[0] != '-' && o2[0] != '-')
     {
         result = addition(o1, o2, base);
     }
-    else if (operator == '-' && o1[0] != '-' && o1[0] != '-')
+    else if ((operator == '-' && o1[0] != '-' && o1[0] != '-') 
+			|| (operator == '+' && (o1[0] == '-' || o2[0] == '-')))
     {
         result = subtraction(o1, o2, base);
     }
@@ -78,6 +84,46 @@ void                push_operand(t_stack **operand, char *data)
     }
 }
 */
+
+void				do_unary(t_stack **head, char operator)
+{
+	FUNC();
+	char				*operand;
+	char				*result;
+	char				*tmp;
+
+	operand = pop_operand(head);
+	printf("operand before: %s\n", operand);
+	result = NULL;
+	if (operator == '#')
+	{
+		if (operand[0] == '-')
+		{
+			tmp = ft_strdup_range(operand, 1, ft_strlen(operand) - 1);
+			result = ft_strdup(tmp);
+			free(tmp);
+			free(operand);
+		}
+		else if (operand[0] != '-')
+		{
+			tmp = ft_strjoin("-", operand);
+			result = ft_strdup(tmp);
+			free(tmp);
+			free(operand);
+		}
+	}
+	else if (operator == '!')
+	{
+		push_operand(head, operand);
+		return ;
+	}
+	if (result)
+	{
+		printf("operand after: %s\n", result);
+		push_operand(head, result);
+	}
+}
+
 void                eval(t_stack *queue, char *base)
 {
     FUNC();
@@ -94,6 +140,10 @@ void                eval(t_stack *queue, char *base)
         {
             push_operand(&operands, queue->data);
         }
+		else if (queue->is_op && (!ft_strcmp(queue->data, "#") || !ft_strcmp(queue->data, "!")))
+		{
+			do_unary(&operands, queue->data[0]);
+		}
         else if (queue->is_op)
         {
             do_op(&operands, queue->data[0], base);

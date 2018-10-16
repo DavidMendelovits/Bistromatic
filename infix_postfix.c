@@ -6,7 +6,7 @@
 /*   By: dmendelo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/19 16:49:40 by dmendelo          #+#    #+#             */
-/*   Updated: 2018/09/19 19:56:39 by dmendelo         ###   ########.fr       */
+/*   Updated: 2018/10/15 18:51:06 by dmendelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 int				is_priority(char a1, char a2)
 {
 	printf("\nfunction -> is_priority\n");
-	if (a1 == '^' && a2 != '(')
+	if ((a1 == '^' || a1 == '#')  && a2 != '(')
 	{
 		printf("%c is priority over %c\n", a1, a2);
 		return (1);
@@ -56,6 +56,49 @@ void            redirect_operator(char op, t_op *o, t_stack **head)
 	push_op(o, op);
 }
 
+int				is_unary_negative(char *input, int p, char *base)
+{
+	if (p == 0 && input[p] == '-')
+	{
+		return (1);
+	}
+	else if (input[p] == '-' && ((input[p - 1] == ')')
+			|| (is_op(input[p - 1]) && is_nbr(input[p + 1], base))))
+	{
+		return (1);
+	}
+	return (0);
+}
+
+int				is_unary_positive(char *input, int p, char *base)
+{
+	if (p == 0 & input[p] == '+')
+	{
+		return (1);
+	}
+	else if (input[p] == '+' && ((input[p - 1] == ')')
+			|| (is_op(input[p - 1]) && is_nbr(input[p + 1], base))))
+	{
+		return (1);
+	}
+	return (0);
+}
+/*
+void			extract_negative_operand(t_stack **head, char *input, int *p, char *base)
+{
+	FUNC();
+	int				begin;
+
+	begin = *p;
+	*p += 1;
+	while (is_nbr(input[*p], base))
+	{
+		*p += 1;
+	}
+	*p -= 1;
+	push_operand(head, ft_strdup_range(input, begin, *p));
+}
+*/
 t_stack         *infix_postfix(char *input, char *base)
 {
     t_stack         *stack;
@@ -71,7 +114,12 @@ t_stack         *infix_postfix(char *input, char *base)
 		printf("-------------input[%d] = %c\n", ip, input[ip]);
         if (is_op(input[ip]))
         {
-            redirect_operator(input[ip], &op, &stack);
+			if (is_unary_negative(input, ip, base))
+				redirect_operator('#', &op, &stack);
+			else if (is_unary_positive(input, ip, base))
+				redirect_operator('!', &op, &stack);
+			else
+            	redirect_operator(input[ip], &op, &stack);
         }
         else if (is_nbr(input[ip], base))
         {
