@@ -6,11 +6,13 @@
 /*   By: dmendelo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/04 12:28:03 by dmendelo          #+#    #+#             */
-/*   Updated: 2018/10/15 18:54:06 by dmendelo         ###   ########.fr       */
+/*   Updated: 2018/10/17 14:02:35 by dmendelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "bistromatic.h"
+//#include "bistromatic.h"
+#include "libft/libft.h"
+#define FUNC() printf("=>%s\n", __func__)
 
 int				is_positive(char *num)
 {
@@ -63,27 +65,43 @@ char            *trim_zeros(char *num, char *base)
     return (new);
 }
 
-char			*division(char *_o1, char *_o2, char *base)
+
+char			*division_by_int(char *numerator, int denominator, char *base)
+{
+	char			quotient[1024];
+	int				qp;
+	int				idx;
+	int				tmp;
+	int				nlen;
+
+	ft_memset(quotient, '\0', 1024);
+	idx = 0;
+	tmp = numerator[idx] - base[0];
+	printf("tmp = %d\n", tmp);
+	while (tmp < denominator)
+	{
+		tmp = tmp * 10 + (numerator[++idx] - base[0]);
+		denominator /= tmp;
+		printf("denominator = %d\n", denominator);
+		printf("tmp = %d\n", tmp);
+	}
+	nlen = ft_strlen(numerator)
+	qp = 0;
+	while (idx < nlen)
+	{
+		quotient[qp] = (tmp / denominator) + base[0];
+		tmp = tmp % denominator * 10 + numerator[++idx];
+		qp += 1;
+	}
+	if (!nlen)
+		return ("0");
+	return (quotient);
+}
+
+char			*division(char *numerator, char *denominator, char *base)
 {
 	FUNC();
-	char			*quotient;
-	char			*tmp;
-
-	tmp = _o1;
-	quotient = ft_strdup_range(base, 0, 0);
-	while (is_positive(tmp) && !(is_zero(tmp, base)))
-	{
-		tmp = subtraction(tmp, _o2, base);
-		if (!is_positive(tmp))
-			break ;
-		quotient = addition(quotient, ft_strdup_range(base, 1, 1), base);
-		printf("quotient: %s\n", quotient);
-	}
-    if (quotient[0] == base[0])
-    {
-        quotient = trim_zeros(quotient, base);
-    }
+	
 	return (quotient);
-
 }
 
