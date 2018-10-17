@@ -6,12 +6,29 @@
 /*   By: dmendelo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/17 14:02:57 by dmendelo          #+#    #+#             */
-/*   Updated: 2018/10/17 15:24:17 by dmendelo         ###   ########.fr       */
+/*   Updated: 2018/10/17 16:01:34 by dmendelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include "libft/libft.h"
+
+int             get_num(char n, char *base)
+{
+    printf("->%s\n", __func__);
+	int			p;
+
+	p = 0;
+	while (base[p])
+	{
+		if (base[p] == n)
+		{
+			return (p);
+		}
+		p += 1;
+	}
+	return (p);
+}
 
 char            *trim_zeros(char *num, char *base)
 {
@@ -35,31 +52,25 @@ char			*division_by_int(char *numerator, int denominator, char *base)
 	int				tmp;
 	int				p;
 	int				qp;
-	int				R;
 
 	p = 0;
 	qp = 0;
 	tmp = 0;
-	R = 0;
 	quotient = ft_memalloc(sizeof(char) * (ft_strlen(numerator) + 1));
 	while (numerator[p])
 	{
 		if (p > 0)
 			tmp *= ft_strlen(base);
-		tmp += ft_atoi_base(ft_strdup_range(&numerator[p], 0, 0), base);
+		tmp += get_num(numerator[p++], base);
 		if (tmp >= denominator)
 		{
-			quotient[qp] = base[tmp / denominator];
-			qp += 1;
+			quotient[qp++] = base[tmp / denominator];
 			tmp %= denominator;
 		}
 		else
 			quotient[qp++] = base[0];
-		p += 1;
 	}
-	if (tmp)
-		R = tmp;
-	if (quotient[0] == base[0])
+	if (quotient[0] == base[0] && ft_strcmp(quotient, "0"))
 		return (trim_zeros(quotient, base));
 	return (quotient);
 }
