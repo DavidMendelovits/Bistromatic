@@ -6,13 +6,15 @@
 /*   By: dmendelo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/19 16:49:40 by dmendelo          #+#    #+#             */
-/*   Updated: 2018/10/15 18:52:13 by dmendelo         ###   ########.fr       */
+/*   Updated: 2018/10/16 20:57:58 by dmendelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "bistromatic.h"
 
 #define MISSING_() "Error! -> missing parenthesis\n"
+#define END_OP "Error! -> You need to end with an operand\n"
+#define MISSING_OP "Error! -> You need to include an operator\n"
 
 int				is_priority(char a1, char a2)
 {
@@ -42,9 +44,12 @@ int				is_priority(char a1, char a2)
 */
 void            redirect_operator(char op, t_op *o, t_stack **head)
 {
+	FUNC();
     char			tmp;
 
 	printf("\nfunction -> redirect_operator\n");
+	printf("stack before:\n");
+	print_op_stack(*o);
 	if (o->sp > 0)
 	{
 		while (!is_empty(o) && is_priority(o->stack[o->sp - 1], op))
@@ -54,6 +59,8 @@ void            redirect_operator(char op, t_op *o, t_stack **head)
 		}
 	}
 	push_op(o, op);
+	printf("stack after:\n");
+	print_op_stack(*o);
 }
 
 int				is_unary_negative(char *input, int p, char *base)
@@ -61,6 +68,15 @@ int				is_unary_negative(char *input, int p, char *base)
 	if (p == 0 && input[p] == '-')
 	{
 		return (1);
+	}
+	else if (p >= 1 && input[p] == '-' && input[p - 1] == '(')
+	{
+		return (1);
+	}
+	else if (p >= 2 && input[p] == '-' && input[p - 1] == ')' 
+			&& is_nbr(input[p - 2], base))
+	{
+		return (0);
 	}
 	else if (input[p] == '-' && ((input[p - 1] == ')')
 			|| (is_op(input[p - 1]) && is_nbr(input[p + 1], base))))
@@ -75,6 +91,11 @@ int				is_unary_positive(char *input, int p, char *base)
 	if (p == 0 & input[p] == '+')
 	{
 		return (1);
+	}
+	else if (p >= 2 && input[p] == '+' && input[p - 1] == ')' 
+			&& is_nbr(input[p - 2], base))
+	{
+		return (0);
 	}
 	else if (input[p] == '+' && ((input[p - 1] == ')')
 			|| (is_op(input[p - 1]) && is_nbr(input[p + 1], base))))
@@ -127,21 +148,34 @@ t_stack         *infix_postfix(char *input, char *base)
         }
         else if (input[ip] == '(')
         {
+			if (ip > 0 && !is_op(input[ip - 1]))
+			{
+				write(2, MISSING_OP, sizeof(MISSING_OP));
+				return (NULL);
+			}
             push_op(&op, input[ip]);
         }
         else if (input[ip] == ')')
         {
             if (!push_paren_contents(&stack, &op))
 			{
-				write(2, MISSING_(), ft_strlen(MISSING_()));
+				write(2, MISSING_(), sizeof(MISSING_()));
 				return (NULL);
 			}
         }
         ip += 1;
 		if (stack)
+		{
 			print_output_stack(stack);
+//			print_op_stack(op);
+		}
     }
-	if (!empty_operator_stack(&op, &stack))
+	if (is_op(input[ip - 1]))
+	{
+		write(2, END_OP, ft_strlen(END_OP));
+		return (NULL);
+	}
+	if (!empty_operator_stack(&op, &stack) || op.is_parenthesis < 0)
 	{
 		write(2, MISSING_(), ft_strlen(MISSING_()));
 		return (NULL);

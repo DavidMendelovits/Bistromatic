@@ -6,7 +6,7 @@
 #    By: dmendelo <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/09/19 19:22:55 by dmendelo          #+#    #+#              #
-#    Updated: 2018/10/04 13:58:10 by dmendelo         ###   ########.fr        #
+#    Updated: 2018/10/16 20:08:31 by dmendelo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ OBJ = bistromatic.o checks.o read_input.o print_functions.o infix_postfix.o \
 
 all: $(NAME)
 
-$(NAME):
+$(NAME): $(OBJ)
 	@make -C libft/
 	@gcc $(CFLAGS) -c $(SRC) -I libft/ -I $(NAME)
 	@gcc -g $(OBJ) libft/libft.a -o $(NAME)

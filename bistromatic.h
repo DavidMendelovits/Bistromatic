@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include "libft.h"
+#include "libft/libft.h"
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -24,6 +24,7 @@ typedef struct			s_stack
 typedef struct			s_op
 {
 	char			stack[1024];
+	int				is_parenthesis;
 	int				sp;
 }						t_op;
 

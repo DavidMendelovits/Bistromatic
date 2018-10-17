@@ -6,9 +6,10 @@ void                print_op_stack(t_op operators)
     int             i;
 
     i = 0;
+	printf("is_parenthesis = %d\n", operators.is_parenthesis);
     while (i < operators.sp)
     {
-        b_printf("stack[%d] = %i\n", i, operators.stack[i]);
+        b_printf("stack[%d] = %c\n", i, operators.stack[i]);
         i += 1;
     }
 }

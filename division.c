@@ -6,7 +6,7 @@
 /*   By: dmendelo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/04 12:28:03 by dmendelo          #+#    #+#             */
-/*   Updated: 2018/10/04 14:17:37 by dmendelo         ###   ########.fr       */
+/*   Updated: 2018/10/15 18:54:06 by dmendelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ char            *trim_zeros(char *num, char *base)
     {
         new[j] = num[i];
         i -= 1;
-        j += 1
+        j += 1;
     }
     return (new);
 }

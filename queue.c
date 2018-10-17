@@ -6,7 +6,7 @@
 /*   By: dmendelo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/19 19:21:40 by dmendelo          #+#    #+#             */
-/*   Updated: 2018/10/15 18:25:07 by dmendelo         ###   ########.fr       */
+/*   Updated: 2018/10/16 18:13:14 by dmendelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ int				push_paren_contents(t_stack **head, t_op *o)
 	printf("\nfunction -> push_paren_contents\n");
 	while (o->sp > 0 && o->stack[o->sp - 1] != '(')
 	{
+		printf("o->stack[%d] = %c", o->sp - 1, o->stack[o->sp - 1]);
 		tmp = pop_op(o);
 		push_op_queue(head, tmp);
 	}
