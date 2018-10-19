@@ -6,7 +6,7 @@
 /*   By: dmendelo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/04 12:28:03 by dmendelo          #+#    #+#             */
-/*   Updated: 2018/10/18 18:13:51 by dmendelo         ###   ########.fr       */
+/*   Updated: 2018/10/18 18:42:39 by dmendelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,12 +116,21 @@ char			*trim_denominator(int M, char *denominator, char *base)
 char			*do_division(char *num, char *denom, char *base)
 {
 	int				M;
-	int				A;
-	int				Q;
-	int				Qn;
-	
+//	char			*A;
+	char			*Q;
+	char			*Qn;
+	char			*R;
+	char			*N;
+
 	M = ft_strlen(denom) - 1;
-	A = trim_denominator(M, denom, base);
+//	A = trim_denominator(M, denom, base);
+	N = ft_strdup_range(num, 0, ft_strlen(num) - M);
+	printf("N (%s) / A (%c)\n", N, denom[0]);
+	Q = division_by_int(N, denom[0], base);
+	int			p = ft_strlen(denom) - 1;
+	char		*one_plus = ft_strdup(denom);
+	one_plus[p] = one_plus[p] - base[
+	R = 
 }
 
 char			*division(char *numerator, char *denominator, char *base)

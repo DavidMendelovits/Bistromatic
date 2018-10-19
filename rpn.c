@@ -55,7 +55,7 @@ void                do_op(t_stack **head, char operator, char *base)
     }
 	else if (operator == '/')
 	{
-		result = division(o1, o2, base);
+//		result = division(o1, o2, base);
 	}
     else
     {
