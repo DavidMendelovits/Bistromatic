@@ -6,7 +6,7 @@
 /*   By: dmendelo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/04 12:28:03 by dmendelo          #+#    #+#             */
-/*   Updated: 2018/10/17 14:02:35 by dmendelo         ###   ########.fr       */
+/*   Updated: 2018/10/18 18:13:51 by dmendelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,9 +98,47 @@ char			*division_by_int(char *numerator, int denominator, char *base)
 	return (quotient);
 }
 
+char			*trim_denominator(int M, char *denominator, char *base)
+{
+	char			*new;
+	char			*tmp;
+	char			*zero;
+
+	tmp = ft_strdup_range(denominator, 0, 0);
+	zero = ft_memalloc(sizeof(char) * (M + 1));
+	ft_memset(zero, base[0], M);
+	new = ft_strjoin(tmp, zero);
+	free(zero);
+	free(tmp);
+	return (new);
+}
+
+char			*do_division(char *num, char *denom, char *base)
+{
+	int				M;
+	int				A;
+	int				Q;
+	int				Qn;
+	
+	M = ft_strlen(denom) - 1;
+	A = trim_denominator(M, denom, base);
+}
+
 char			*division(char *numerator, char *denominator, char *base)
 {
 	FUNC();
+	if (ft_strlen(numerator) < ft_strlen(denominator))
+	{
+		return ("0");
+	}
+	else if (ft_strlen(numerator) > 10 && ft_strlen(denominator) == 1)
+	{
+		return (division_by_int(numerator, ft_atoi(denominator), base));
+	}
+	else if (*numerator && *denominator)
+	{
+		return (do_division(numerator, denominator, base));
+	}
 	
 	return (quotient);
 }
