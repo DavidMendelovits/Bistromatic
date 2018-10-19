@@ -6,7 +6,7 @@
 /*   By: dmendelo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/18 07:50:45 by dmendelo          #+#    #+#             */
-/*   Updated: 2018/09/19 13:09:22 by dmendelo         ###   ########.fr       */
+/*   Updated: 2018/10/19 13:15:12 by dmendelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int                 bistromatic(char *base, int input_size)
     eval(stack, base);
     return (1);
 }
-
+/*
 int                 main(int argc, char **argv)
 {
     if (argc == 3)
@@ -44,4 +44,4 @@ int                 main(int argc, char **argv)
         }
     }
     return (0);
-}
+}*/
