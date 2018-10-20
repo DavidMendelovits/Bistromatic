@@ -6,11 +6,12 @@
 /*   By: dmendelo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/17 14:02:57 by dmendelo          #+#    #+#             */
-/*   Updated: 2018/10/19 18:39:12 by dmendelo         ###   ########.fr       */
+/*   Updated: 2018/10/20 12:55:17 by dmendelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "test_div.h"
+#include <assert.h>
 
 char			get_dif(char _a, char _b, char *base, int *borrow)
 {
@@ -150,11 +151,13 @@ char			*subtraction(char *o1, char *o2, char *base)
 	{
 		pad_string_zero(&o2, p1 - p2, base[0]);
 	}
-//    printf("%s\n%s\n", o1, o2);
+ //   printf("%s\n%s\n", o1, o2);
 	difference = subtract(o1, o2, base);
-  //  printf("difference: %s\n", difference);
+ //   printf("difference: %s\n", difference);
 	if (difference[0] == '-')
 		return (trim_zero_neg(difference, base));
+	else if (difference[0] == base[0])
+		trim_zeros(&difference, base);
 	return (difference);
 }
 
@@ -162,7 +165,6 @@ void            pad_string_zero(char **str, int pad, char zero)
 {
 //    printf("->%s\n", __func__);
     char            *tmp;
-  //  char            *_free;
     int             sp;
     int             tp;
 
@@ -187,7 +189,7 @@ void            pad_string_zero(char **str, int pad, char zero)
 
 int             get_num(char n, char *base)
 {
-  //  printf("->%s\n", __func__);
+ //   printf("->%s\n", __func__);
 	int			p;
 
 	p = 0;
@@ -208,10 +210,12 @@ void	           trim_zeros(char **num, char *base)
     char            *new;
 	char			*tmp;
 	int				p;
+	int				len;
 
+	len = ft_strlen(*num);
 	p = 0;
 	tmp = *num;
-	while (tmp[p] == base[0])
+	while (tmp[p] == base[0] && p < len - 1)
 	{
 		p += 1;
 	}
@@ -222,7 +226,7 @@ void	           trim_zeros(char **num, char *base)
 
 char            operate(char _a, char _b, char *base, int *carry)
 {
- //   printf("->%s\n", __func__);
+//    printf("->%s\n", __func__);
     int         a;
     int         b;
     int         c;
@@ -248,11 +252,11 @@ char            operate(char _a, char _b, char *base, int *carry)
 //		printf("carry now set to %d\n", *carry);
     }
 //    printf("c mod base: %d\n", c);
-  //  printf("carry: %d\n", *carry);
+//    printf("carry: %d\n", *carry);
  //   printf("_c = base[%d] (%c)\n", c, base[c]);
     _c = base[c];
 
- //   printf("return _c (%c)\n", _c);
+//    printf("return _c (%c)\n", _c);
     return (_c);
 }
 
@@ -271,8 +275,8 @@ char            *add(char *o1, char *o2, char *base)
     while (p >= 0)
     {
 		sum[sp] = operate(o1[p], o2[p], base, &carry);
-  //      printf("sum[%d] = %c\n", sp, sum[sp]);
-	//	printf("sum = %s\n", sum);
+//        printf("sum[%d] = %c\n", sp, sum[sp]);
+//		printf("sum = %s\n", sum);
 		sp += 1;
 		p -= 1;
     }
@@ -326,7 +330,7 @@ char			*redirect_addition(char *o1, char *o2, char *base)
 
 char            *addition(char *o1, char *o2, char *base)
 {
-  //  printf("->%s\n", __func__);
+//    printf("->%s\n", __func__);
     int             p1;
     int             p2;
     char            *sum;
@@ -350,13 +354,13 @@ char            *addition(char *o1, char *o2, char *base)
 //    printf("sum: %s\n", sum);
 	if (sum[0] == base[0])
     	trim_zeros(&sum, base);
- //   printf("sum: %s\n", sum);
+//    printf("sum: %s\n", sum);
 	return (sum);
 }
 
 void                init_o(t_mult *o, char *_o, char *base)
 {
- //   FUNC();
+  //  FUNC();
     int             i;
 
     o->len = ft_strlen(_o);
@@ -372,7 +376,7 @@ void                init_o(t_mult *o, char *_o, char *base)
     o->p = 0;
  //   for (i = 0; i < o->len; i++)
  //       printf("%d ", o->num[i]);
- //   printf("\n");
+//    printf("\n");
 }
 
 void                iterate_multiply(int **prod, t_mult *o1, t_mult *o2)
@@ -391,7 +395,7 @@ void                iterate_multiply(int **prod, t_mult *o1, t_mult *o2)
 
 int                *multiply(t_mult *o1, t_mult *o2, char *base)
 {
- //   FUNC();
+//    FUNC();
     int             *product;
     int             radix;
     int             tmp;
@@ -460,7 +464,7 @@ char				*redirect_multiplication(char *o1, char *o2, char *base)
 
 char                *multiplication(char *_o1, char *_o2, char *base)
 {
- //   FUNC();
+//    FUNC();
     t_mult          o1;
     t_mult          o2;
     int             *r_product;
@@ -472,7 +476,7 @@ char                *multiplication(char *_o1, char *_o2, char *base)
 	}
     init_o(&o1, _o1, base);
     init_o(&o2, _o2, base);
- //   printf("%s * %s\n", _o1, _o2);
+//    printf("%s * %s\n", _o1, _o2);
     r_product = multiply(&o1, &o2, base);
     product = read_r_product(r_product, o1.len + o2.len, base);
     return (product);
@@ -493,11 +497,11 @@ char			*division_by_int(char *numerator, int denominator, char *base)
 	quotient = ft_memalloc(sizeof(char) * (ft_strlen(numerator) + 1));
 	while (numerator[p])
 	{
-	//	printf("numerator[%d] = %c\n", p, numerator[p]);
+//		printf("numerator[%d] = %c\n", p, numerator[p]);
 		if (p > 0)
 			tmp *= ft_strlen(base);
 		tmp += get_num(numerator[p++], base);
-	//	printf("tmp = %d\ndenom = %d\n", tmp, denominator);
+//		printf("tmp = %d\ndenom = %d\n", tmp, denominator);
 		if (tmp >= denominator)
 		{
 			quotient[qp] = base[tmp / denominator];
@@ -518,6 +522,7 @@ char			*division_by_int(char *numerator, int denominator, char *base)
 
 char			*abs_value(char *num)
 {
+//	FUNC();
 	char			*new;
 
 	if (num[0] == '-')
@@ -566,10 +571,25 @@ int				compare(char *o1, char *o2, char *base)
 	return (0);
 }
 
+int				is_zero(char *num, char *base)
+{
+	int				i;
+
+	i = 0;
+	while (num[i])
+	{
+		if (num[i] != base[0])
+		{
+			return (0);
+		}
+		i += 1;
+	}
+	return (1);
+}
+
 char			*do_division(char *num, char *denom, char *base)
 {
 	int				M;
-//	char			*A;
 	char			*Q;
 	char			*Qn;
 	char			*R;
@@ -578,7 +598,6 @@ char			*do_division(char *num, char *denom, char *base)
 	char			*tmp2;
 
 	M = ft_strlen(denom) - 1;
-//	A = trim_denominator(M, denom, base);
 	N = ft_strdup_range(num, 0, ft_strlen(num) - M - 1);
 //	printf("N (%s) / A (%c)\n", N, denom[0]);
 	Q = division(N, ft_strdup_range(denom, 0, 0), base);
@@ -593,7 +612,9 @@ char			*do_division(char *num, char *denom, char *base)
 //		printf("--------------------tmp = %s\n", tmp);
 		R = subtraction(num, tmp, base);
 //		printf("-----------------R (new) = %s\n", R);
-	//	free(tmp);	
+		if (is_zero(R, base))
+			break ;
+//		free(tmp);	
 //	free(N);
 		N = ft_strdup_range(R, 0, ft_strlen(R) - M - 1);
 		tmp = division(N, ft_strdup_range(denom, 0, 0), base);
@@ -668,7 +689,6 @@ char			*division(char *numerator, char *denominator, char *base)
 	{
 		return (do_division(numerator, denominator, base));
 	}
-
 	else
 		return (NULL);
 //	return (quotient);
@@ -680,8 +700,7 @@ int				main(int argc, char **argv)
 	if (argc == 3)
 	{
 		printf("comparing %s - %s\n%d\n", argv[1], argv[2], compare(argv[1], argv[2], "0123456789")); 
-		printf("\n%s\n", division(argv[1], argv[2], "0123456789"));
-		//		printf("\n%s\n", division_by_int(argv[1], ft_atoi(argv[2]), "0123456789"));
+		printf("\n%s\n", division(ft_strdup(argv[1]), ft_strdup(argv[2]), "0123456789"));
 	}
 	return (0);
 }
