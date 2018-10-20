@@ -16,8 +16,8 @@ void                init_o(t_mult *o, char *_o, char *base)
         o->p += 1;
     }
     o->p = 0;
-    for (i = 0; i < o->len; i++)
-        printf("%d ", o->num[i]);
+//    for (i = 0; i < o->len; i++)
+ //       printf("%d ", o->num[i]);
     printf("\n");
 }
 
@@ -30,8 +30,8 @@ void                iterate_multiply(int **prod, t_mult *o1, t_mult *o2)
         (*prod)[o1->p + o2->p] += o1->num[o1->p] * o2->num[o2->p];
         o1->p += 1;
     }
-    for (int i = 0; i < (o1->len + o2->len); i += 1)
-        printf("%d ", (*prod)[i]);
+ //   for (int i = 0; i < (o1->len + o2->len); i += 1)
+   //     printf("%d ", (*prod)[i]);
     printf("\n");
 }
 
