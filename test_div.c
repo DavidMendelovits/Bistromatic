@@ -6,7 +6,7 @@
 /*   By: dmendelo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/17 14:02:57 by dmendelo          #+#    #+#             */
-/*   Updated: 2018/10/20 12:55:17 by dmendelo         ###   ########.fr       */
+/*   Updated: 2018/10/21 12:27:46 by dmendelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ char			*trim_zero_neg(char *num, char *base)
 	}
 	tmp = ft_strdup_range(num, p, ft_strlen(num) - 1);
 	new = ft_strjoin("-", tmp);
-	free(tmp);
+//	free(tmp);
 	return (new);
 }
 
@@ -220,7 +220,7 @@ void	           trim_zeros(char **num, char *base)
 		p += 1;
 	}
 	new = ft_strdup_range(*num, p, (ft_strlen(*num) - 1));
-	free(*num);
+//	free(*num);
 	*num = new;
 }
 
@@ -291,7 +291,7 @@ void			trim_negative(char **o)
 	char			*new;
 
 	new = ft_strdup_range(*o, 1, ft_strlen(*o));
-	free(*o);
+//	free(*o);
 	*o = new;
 }
 
@@ -429,7 +429,7 @@ char                *read_r_product(int *_prod, int len, char *base)
     prod = (char *)ft_memalloc(sizeof(char) * (len + 1));
     i = 0;
     p = len - 1;
-    while (_prod[p] == 0)
+    while (_prod[p] == 0 && p >= 0)
         p -= 1;
     while (p >= 0)
     {
@@ -470,15 +470,23 @@ char                *multiplication(char *_o1, char *_o2, char *base)
     int             *r_product;
     char            *product;
 
-	if (_o1[0] == '-' || _o2[0] == '-')
+	if (is_zero(_o1, base) || is_zero(_o2, base))
 	{
+//		printf("1\n");
+		return (ft_strdup_range(base, 0, 0));
+	}
+	else if (_o1[0] == '-' || _o2[0] == '-')
+	{
+//		printf("2\n");
 		return (redirect_multiplication(_o1, _o2, base));
 	}
-    init_o(&o1, _o1, base);
+
+	init_o(&o1, _o1, base);
     init_o(&o2, _o2, base);
-//    printf("%s * %s\n", _o1, _o2);
+//	printf("%s * %s\n", _o1, _o2);
     r_product = multiply(&o1, &o2, base);
     product = read_r_product(r_product, o1.len + o2.len, base);
+//	printf("product = %s\n", product);
     return (product);
 }
 
@@ -527,19 +535,19 @@ char			*abs_value(char *num)
 
 	if (num[0] == '-')
 	{
-		new = ft_strdup_range(num, 1, ft_strlen(num) - 1);
+		new = ft_strdup(num);
+		trim_negative(&new);
 		return (new);
 	}
-	else
-	{
-		return (num);
-	}
+	return (num);
 }
 
 int				compare(char *o1, char *o2, char *base)
 {
+//	FUNC();
 	int			p;
 
+//	printf("%s ? %s\n", o1, o2);
 	p = 0;
 	if (ft_strlen(o1) > ft_strlen(o2) && o1[0] != '-')
 	{
@@ -573,6 +581,7 @@ int				compare(char *o1, char *o2, char *base)
 
 int				is_zero(char *num, char *base)
 {
+//	FUNC();
 	int				i;
 
 	i = 0;
@@ -580,10 +589,12 @@ int				is_zero(char *num, char *base)
 	{
 		if (num[i] != base[0])
 		{
+	//		printf("%c isn't zero\n", num[i]);
 			return (0);
 		}
 		i += 1;
 	}
+//	printf("is zero!\n");
 	return (1);
 }
 
@@ -602,12 +613,13 @@ char			*do_division(char *num, char *denom, char *base)
 //	printf("N (%s) / A (%c)\n", N, denom[0]);
 	Q = division(N, ft_strdup_range(denom, 0, 0), base);
 //	printf("Q = %s\n",Q);
-	free(N);
+//	free(N);
 	R = addition(denom, "1", base);
 //	printf("R = %s\n", R);
 	int i = 0;
 	while (compare(abs_value(R), denom, base) >= 0)
 	{
+//		printf("doing...\nR = N - (Q * D)\n");
 		tmp = multiplication(Q, denom, base);
 //		printf("--------------------tmp = %s\n", tmp);
 		R = subtraction(num, tmp, base);
@@ -616,7 +628,14 @@ char			*do_division(char *num, char *denom, char *base)
 			break ;
 //		free(tmp);	
 //	free(N);
-		N = ft_strdup_range(R, 0, ft_strlen(R) - M - 1);
+//		printf("doing...\nQn = Q + R/A\n");
+		if (ft_strlen(R) >= M + 1)
+			N = ft_strdup_range(R, 0 , ft_strlen(R) - M - 1);
+		else
+		{
+			N = ft_strdup_range(base, 0, 0);
+		}
+//		printf(" Q(%s) + R(%s) / A(%c)\n", Q, R, denom[0]);
 		tmp = division(N, ft_strdup_range(denom, 0, 0), base);
 	//	free(N);
 //		printf("---------------tmp (R/A) = %s\n", tmp);
@@ -630,7 +649,15 @@ char			*do_division(char *num, char *denom, char *base)
 		Q = division(tmp, ft_strdup_range(base, 2, 2), base);
 //		printf("-------------new Q = %s\n", Q);
 //		free(tmp);
+		i++;
 	}
+	tmp = multiplication(Q, denom, base);
+	R = subtraction(num, tmp, base);
+	free(tmp);
+	printf("%d loops\n", i);
+	printf("end loop\n");
+	printf("Q = %s\n", Q);
+	printf("R = %s\n",  R);
 	if (R[0] == '-')
 	{
 		tmp = subtraction(Q, ft_strdup_range(base, 1, 1), base);
@@ -640,6 +667,22 @@ char			*do_division(char *num, char *denom, char *base)
 		R = ft_strdup(tmp);
 		free(tmp);
 	}
+//	if (!compare(R, denom, base))
+//	{
+//		tmp = subtraction(R, denom, base);
+//		R = ft_strdup(tmp);
+//		free(tmp);
+//		tmp = addition(Q, ft_strdup_range(base, 1, 1), base);
+//		Q = ft_strdup(tmp);
+//		free(tmp);
+//	}
+	printf("checking...\n");
+	char	*check = addition(multiplication(Q, denom, base), R, base);
+	printf("%s -\n%s -\n", check, num);
+	if (!ft_strcmp(num, check))
+		printf("matched!\n");
+	printf("Q = %s\n", Q);
+	printf("R = %s\n", R);
 	return (Q);
 }
 
@@ -677,6 +720,17 @@ char			*division(char *numerator, char *denominator, char *base)
 	{
 		return (redirect_division(numerator, denominator, base));
 	}
+	if (is_zero(numerator, base))
+		return ("0");
+	else if (is_zero(denominator, base))
+		return ("undefined!\n");
+	if (ft_strlen(numerator) == ft_strlen(denominator))
+	{
+		if (compare(numerator, denominator, base) < 0)
+			return ("0");
+		else if (!ft_strcmp(numerator, denominator))
+			return ("1");
+	}
 	if (ft_strlen(numerator) < ft_strlen(denominator))
 	{
 		return ("0");
@@ -687,6 +741,9 @@ char			*division(char *numerator, char *denominator, char *base)
 	}
 	else if (*numerator && *denominator)
 	{
+		if (denominator[0] == base[1] && ft_strlen(denominator) == 1)
+			return (numerator);
+		printf("no!\n");
 		return (do_division(numerator, denominator, base));
 	}
 	else
@@ -697,10 +754,17 @@ char			*division(char *numerator, char *denominator, char *base)
 
 int				main(int argc, char **argv)
 {
-	if (argc == 3)
+	if (argc == 4)
 	{
-		printf("comparing %s - %s\n%d\n", argv[1], argv[2], compare(argv[1], argv[2], "0123456789")); 
-		printf("\n%s\n", division(ft_strdup(argv[1]), ft_strdup(argv[2]), "0123456789"));
+		if (argv[2][0] == '+')
+			printf("\n%s\n", addition(ft_strdup(argv[1]), ft_strdup(argv[3]), "0123456789"));
+		else if (argv[2][0] == '-')
+			printf("\n%s\n", subtraction(ft_strdup(argv[1]), ft_strdup(argv[3]), "0123456789"));
+		else if (argv[2][0] == 'p')
+			printf("\n%s\n", multiplication(ft_strdup(argv[1]), ft_strdup(argv[3]), "0123456789"));
+		else if (argv[2][0] == '/')
+			printf("\n%s\n", division(ft_strdup(argv[1]), ft_strdup(argv[3]), "0123456789"));
+	
 	}
 	return (0);
 }

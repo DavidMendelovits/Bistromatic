@@ -6,7 +6,7 @@
 /*   By: dmendelo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/19 13:21:07 by dmendelo          #+#    #+#             */
-/*   Updated: 2018/10/19 16:55:49 by dmendelo         ###   ########.fr       */
+/*   Updated: 2018/10/20 18:48:28 by dmendelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,3 +47,4 @@ char				*redirect_multiplication(char *o1, char *o2, char *base);
 char				*redirect_division(char *o1, char *o2, char *base);
 void				prepend_negative(char **o);
 void				trim_negative(char **o);
+int					is_zero(char *num, char *base);
