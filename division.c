@@ -6,149 +6,124 @@
 /*   By: dmendelo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/04 12:28:03 by dmendelo          #+#    #+#             */
-/*   Updated: 2018/10/18 18:42:39 by dmendelo         ###   ########.fr       */
+/*   Updated: 2018/10/21 19:28:48 by dmendelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-//#include "bistromatic.h"
-#include "libft/libft.h"
-#define FUNC() printf("=>%s\n", __func__)
-
-int				is_positive(char *num)
-{
-	FUNC();
-	if (num[0] != '-')
-	{
-		return (1);
-	}
-	return (0);
-}
-
-int				is_zero(char *num, char *base)
-{
-	int				i;
-
-	i = 0;
-	while (num[i])
-	{
-		if (num[i] != base[0])
-		{
-			return (0);
-		}
-		i += 1;
-	}
-	return (1);
-}
-
-char            *trim_zeros(char *num, char *base)
-{
-    FUNC();
-    char            *new;
-    int             i;
-    int             j;
-
-    num = ft_strrev(num);
-    i = 0;
-    while (num[i] != base[0])
-    {
-        i += 1;
-    }
-    new = (char *)ft_memalloc(sizeof(char) * (i + 1));
-    j = 0;
-    i -= 1;
-    while (i >= 0)
-    {
-        new[j] = num[i];
-        i -= 1;
-        j += 1;
-    }
-    return (new);
-}
-
+#include "bistromatic.h"
 
 char			*division_by_int(char *numerator, int denominator, char *base)
 {
-	char			quotient[1024];
-	int				qp;
-	int				idx;
+	char			*quotient;
 	int				tmp;
-	int				nlen;
+	int				p;
+	int				qp;
 
-	ft_memset(quotient, '\0', 1024);
-	idx = 0;
-	tmp = numerator[idx] - base[0];
-	printf("tmp = %d\n", tmp);
-	while (tmp < denominator)
-	{
-		tmp = tmp * 10 + (numerator[++idx] - base[0]);
-		denominator /= tmp;
-		printf("denominator = %d\n", denominator);
-		printf("tmp = %d\n", tmp);
-	}
-	nlen = ft_strlen(numerator)
+	p = 0;
 	qp = 0;
-	while (idx < nlen)
+	tmp = 0;
+	quotient = ft_memalloc(sizeof(char) * (ft_strlen(numerator) + 1));
+	while (numerator[p])
 	{
-		quotient[qp] = (tmp / denominator) + base[0];
-		tmp = tmp % denominator * 10 + numerator[++idx];
-		qp += 1;
+		(p > 0) ? tmp *= ft_strlen(base) : 0;
+		tmp += get_num(numerator[p++], base);
+		if (tmp >= denominator)
+		{
+			quotient[qp] = base[tmp / denominator];
+			qp += 1;
+			tmp %= denominator;
+		}
+		else
+			quotient[qp++] = base[0];
 	}
-	if (!nlen)
-		return ("0");
+	if (quotient[0] == base[0] && ft_strcmp(quotient, "0"))
+		trim_zeros(&quotient, base);
 	return (quotient);
 }
 
-char			*trim_denominator(int M, char *denominator, char *base)
+char			*guess_r(char *num, char *denom, char *quotient, char *base)
 {
-	char			*new;
 	char			*tmp;
-	char			*zero;
+	char			*remainder;
 
-	tmp = ft_strdup_range(denominator, 0, 0);
-	zero = ft_memalloc(sizeof(char) * (M + 1));
-	ft_memset(zero, base[0], M);
-	new = ft_strjoin(tmp, zero);
-	free(zero);
+	tmp = multiplication(quotient, denom, base);
+	remainder = subtraction(num, tmp, base);
 	free(tmp);
-	return (new);
+	return (remainder);
 }
 
-char			*do_division(char *num, char *denom, char *base)
+char			*guess_quotient(char *q, char *r, char *d, char *base)
 {
-	int				M;
-//	char			*A;
-	char			*Q;
-	char			*Qn;
-	char			*R;
-	char			*N;
+	int				m;
+	char			*qn;
+	char			*o1;
+	char			*o2;
 
-	M = ft_strlen(denom) - 1;
-//	A = trim_denominator(M, denom, base);
-	N = ft_strdup_range(num, 0, ft_strlen(num) - M);
-	printf("N (%s) / A (%c)\n", N, denom[0]);
-	Q = division_by_int(N, denom[0], base);
-	int			p = ft_strlen(denom) - 1;
-	char		*one_plus = ft_strdup(denom);
-	one_plus[p] = one_plus[p] - base[
-	R = 
+	m = ft_strlen(d) - 1;
+	if (ft_strlen(r) > m)
+		o1 = ft_strdup_range(r, 0, ft_strlen(r) - m - 1);
+	else
+		o1 = ft_strdup_range(base, 0, 0);
+	o2 = division(o1, ft_strdup_range(d, 0, 0), base);
+	qn = addition(q, o2, base);
+	free(o1);
+	free(o2);
+	return (qn);
+}
+
+char			*do_division(char *num, char *denom, char *base, int modulo)
+{
+	int				m;
+	char			*q;
+	char			*qn;
+	char			*r;
+	char			*n;
+
+	m = ft_strlen(denom) - 1;
+	n = ft_strdup_range(num, 0, ft_strlen(num) - m - 1);
+	q = division(n, ft_strdup_range(denom, 0, 0), base);
+	r = addition(denom, "1", base);
+	while (compare(abs_value(r), denom, base) >= 0)
+	{
+		r = guess_r(num, denom, q, base);
+		qn = guess_quotient(q, r, denom, base);
+		q = avg(q, qn, base);
+	}
+	r = guess_r(num, denom, q, base);
+	if (r[0] == '-')
+	{
+		increment(&q, "-1", base);
+		increment(&r, denom, base);
+	}
+	return ((modulo) ? (r) : (q));
 }
 
 char			*division(char *numerator, char *denominator, char *base)
 {
-	FUNC();
+	if (numerator[0] == '-' || denominator[0] == '-')
+		return (redirect_division(numerator, denominator, base));
+	if (is_zero(numerator, base))
+		return (ft_strdup_range(base, 0, 0));
+	else if (is_zero(denominator, base))
+		return (NULL);
+	if (ft_strlen(numerator) == ft_strlen(denominator))
+	{
+		if (compare(numerator, denominator, base) < 0)
+			return (ft_strdup_range(base, 0, 0));
+		else if (!ft_strcmp(numerator, denominator))
+			return (ft_strdup_range(base, 1, 1));
+	}
 	if (ft_strlen(numerator) < ft_strlen(denominator))
-	{
-		return ("0");
-	}
-	else if (ft_strlen(numerator) > 10 && ft_strlen(denominator) == 1)
-	{
-		return (division_by_int(numerator, ft_atoi(denominator), base));
-	}
+		return (ft_strdup_range(base, 0, 0));
+	else if (ft_strlen(denominator) == 1)
+		return (division_by_int(numerator, get_num(denominator[0], base), base));
 	else if (*numerator && *denominator)
 	{
-		return (do_division(numerator, denominator, base));
+		if (denominator[0] == base[1] && ft_strlen(denominator) == 1)
+			return (numerator);
+		return (do_division(numerator, denominator, base, 0));
 	}
-	
-	return (quotient);
+	else
+		return (NULL);
 }
 

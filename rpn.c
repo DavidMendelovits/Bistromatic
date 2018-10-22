@@ -1,155 +1,120 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   rpn.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dmendelo <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/10/21 16:46:09 by dmendelo          #+#    #+#             */
+/*   Updated: 2018/10/21 20:47:33 by dmendelo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "bistromatic.h"
 
-
-char                *pop_operand(t_stack **head)
+char				*pop_operand(t_stack **head)
 {
-    FUNC();
-    char                *o;
-    t_stack             *tmp;
+	char				*o;
+	t_stack				*tmp;
 
 	if (!(*head))
 		return (0);
-    o = ft_strdup((*head)->data);
-    tmp = *head;
-    *head = (*head)->next;
-    if (*head)
-    {
-        (*head)->prev = NULL;
-    }
+	o = ft_strdup((*head)->data);
+	tmp = *head;
+	*head = (*head)->next;
+	if (*head)
+	{
+		(*head)->prev = NULL;
+	}
 	free(tmp->data);
-    free(tmp);
-    return (o);
+	free(tmp);
+	return (o);
 }
 
-void                do_op(t_stack **head, char operator, char *base)
+void				do_op(t_stack **head, char operator, char *base)
 {
-    FUNC();
-    char                *result;
-    char                *o1;
-    char                *o2;
-    //int                 result_sign;
+	char				*result;
+	char				*o1;
+	char				*o2;
 
-    o2 = pop_operand(head);
-    o1 = pop_operand(head);
-    //result_sign = 1;
-    printf("%s %c %s\n", o1, operator, o2);
-    result = NULL;
+	o2 = pop_operand(head);
+	o1 = pop_operand(head);
+	printf("\noperation:\n%s %c %s\n", o1, operator, o2);
+	result = NULL;
 	if (!o1 || !o2)
 		return ;
-    if (operator == '+' && o1[0] != '-' && o2[0] != '-')
-    {
-        result = addition(o1, o2, base);
-    }
-    else if ((operator == '-' && o1[0] != '-' && o1[0] != '-') 
-			|| (operator == '+' && (o1[0] == '-' || o2[0] == '-')))
-    {
-        result = subtraction(o1, o2, base);
-    }
-    else if (operator == '*')
-    {
-        result = multiplication(o1, o2, base);
-    }
-    else if (operator == '^')
-    {
-        result = exponent(o1, o2, base);
-    }
+	if (operator == '+')
+		result = addition(o1, o2, base);
+	else if (operator == '-')
+		result = subtraction(o1, o2, base);
+	else if (operator == '*')
+		result = multiplication(o1, o2, base);
+	else if (operator == '^')
+		result = exponent(o1, o2, base);
 	else if (operator == '/')
-	{
-//		result = division(o1, o2, base);
-	}
-    else
-    {
-        result = NULL;
-    }
-    if (result)
-        push_operand(head, result);
+		result = division(o1, o2, base);
+	else if (operator == '%')
+		result = modulo(o1, o2, base);
+	else
+		result = NULL;
+	if (result)
+		push_operand(head, result);
+	else
+		g_err = 1;
 }
-/*
-void                push_operand(t_stack **operand, char *data)
-{
-    t_stack             *new;
-
-    new = (t_stack *)malloc(sizeof(t_stack));
-    new->content = data;
-    new->prev = NULL;
-    if (*operand)
-    {
-        new->next = *operand;
-        *operand->prev = new;
-    }
-    else
-    {
-        new->next = NULL;
-        *operand = new;
-    }
-}
-*/
 
 void				do_unary(t_stack **head, char operator)
 {
-	FUNC();
 	char				*operand;
-	char				*result;
-	char				*tmp;
 
 	operand = pop_operand(head);
 	printf("operand before: %s\n", operand);
-	result = NULL;
 	if (operator == '#')
 	{
 		if (operand[0] == '-')
 		{
-			tmp = ft_strdup_range(operand, 1, ft_strlen(operand) - 1);
-			result = ft_strdup(tmp);
-			free(tmp);
-			free(operand);
+			trim_negative(&operand);
 		}
 		else if (operand[0] != '-')
 		{
-			tmp = ft_strjoin("-", operand);
-			result = ft_strdup(tmp);
-			free(tmp);
-			free(operand);
+			prepend_negative(&operand);
 		}
 	}
-	else if (operator == '!')
+	if (operand)
 	{
+		printf("operand after: %s\n", operand);
 		push_operand(head, operand);
-		return ;
-	}
-	if (result)
-	{
-		printf("operand after: %s\n", result);
-		push_operand(head, result);
 	}
 }
 
-void                eval(t_stack *queue, char *base)
+void				eval(t_stack *queue, char *base)
 {
-    FUNC();
-    t_stack             *operands;
-
-    while (queue->next)
-    {
-        queue = queue->next;
-    }
-    operands = NULL;
-    while (queue)
-    {
-        if (!queue->is_op && queue->is_string)
-        {
-            push_operand(&operands, queue->data);
-        }
-		else if (queue->is_op && (!ft_strcmp(queue->data, "#") || !ft_strcmp(queue->data, "!")))
+	t_stack				*operands;
+	
+	g_err = 0;
+	while (queue->next)
+		queue = queue->next;
+	operands = NULL;
+	while (queue)
+	{
+		printf("---\n%s\n---", queue->data);
+		if (g_err)
 		{
-			do_unary(&operands, queue->data[0]);
+			write_error(SYNTAX_ERROR, sizeof(SYNTAX_ERROR));
+			return ;
 		}
-        else if (queue->is_op)
-        {
-            do_op(&operands, queue->data[0], base);
-        }
-        queue = queue->prev;
-        if (operands)
-            print_output_stack(operands);
-    }
+		if (!queue->is_op && queue->is_string)
+			push_operand(&operands, queue->data);
+		else if (queue->is_op && (!ft_strcmp(queue->data, "#")
+				|| !ft_strcmp(queue->data, "!")))
+			do_unary(&operands, queue->data[0]);
+		else if (queue->is_op)
+			do_op(&operands, queue->data[0], base);
+		queue = queue->prev;
+		if (queue && queue->data)
+			printf("\n%s\n", queue->data);
+		if (operands)
+			print_output_stack(operands);
+//		print_output_stack(queue);
+	}
 }

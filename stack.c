@@ -6,23 +6,24 @@
 /*   By: dmendelo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/19 19:14:12 by dmendelo          #+#    #+#             */
-/*   Updated: 2018/10/16 20:18:30 by dmendelo         ###   ########.fr       */
+/*   Updated: 2018/10/21 17:00:40 by dmendelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "bistromatic.h"
 
-void            init_op_stack(t_op *o)
+void			init_op_stack(t_op *o)
 {
-    int         i;
+	int				i;
+
 	o->is_parenthesis = 0;
-    i = 0;
-    while (i < 1024)
-    {
-        o->stack[i] = '\0';
-        i += 1;
-    }
-    o->sp = 0;
+	i = 0;
+	while (i < 1024)
+	{
+		o->stack[i] = '\0';
+		i += 1;
+	}
+	o->sp = 0;
 }
 
 void			push_op(t_op *o, char op)
@@ -34,8 +35,6 @@ void			push_op(t_op *o, char op)
 
 char			pop_op(t_op *o)
 {
-	printf("\nfunction -> pop_op\n");
-
 	char			value;
 
 	o->sp -= 1;
@@ -44,24 +43,24 @@ char			pop_op(t_op *o)
 	return (value);
 }
 
-int             is_empty(t_op *o)
+int				is_empty(t_op *o)
 {
-    int             i;
+	int				i;
 
-    printf("\nfunction -> is_empty\n");
+	printf("\nfunction -> is_empty\n");
 	i = o->sp - 1;
 	printf("sp = %d\n", o->sp);
-    while (i >= 0)
-    {
+	while (i >= 0)
+	{
 		printf("'%c' @ %d\n", o->stack[i], i);
-        if (o->stack[i])
-        {
+		if (o->stack[i])
+		{
 			printf("isn't empty\n");
-            return (0);
-        }
-        i -= 1;
-    }
-    return (1);
+			return (0);
+		}
+		i -= 1;
+	}
+	return (1);
 }
 
 int				empty_operator_stack(t_op *o, t_stack **head)

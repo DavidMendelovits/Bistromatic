@@ -6,44 +6,39 @@
 /*   By: dmendelo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/22 18:34:16 by dmendelo          #+#    #+#             */
-/*   Updated: 2018/10/15 11:35:55 by dmendelo         ###   ########.fr       */
+/*   Updated: 2018/10/21 14:21:48 by dmendelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "bistromatic.h"
-//#include "libft/libft.h"
-//#include <stdio.h>
 
-void            pad_string_zero(char **str, int pad, char zero)
+void			pad_string_zero(char **str, int pad, char zero)
 {
-    printf("->%s\n", __func__);
-    char            *tmp;
-  //  char            *_free;
-    int             sp;
-    int             tp;
+	char			*tmp;
+	int				sp;
+	int				tp;
 
-    sp = 0;
-    tmp = (char *)malloc(sizeof(char) * (ft_strlen(*str) + pad + 1));
-    tp = 0;
-    while (pad)
-    {
-        tmp[tp] = zero;
-        pad -= 1;
-        tp += 1;
-    }
-    while ((*str)[sp])
-    {
-        tmp[tp] = (*str)[sp];
-        tp += 1;
-        sp += 1;
-    }
-    tmp[tp] = '\0';
-    *str = tmp;
+	sp = 0;
+	tmp = (char *)malloc(sizeof(char) * (ft_strlen(*str) + pad + 1));
+	tp = 0;
+	while (pad)
+	{
+		tmp[tp] = zero;
+		pad -= 1;
+		tp += 1;
+	}
+	while ((*str)[sp])
+	{
+		tmp[tp] = (*str)[sp];
+		tp += 1;
+		sp += 1;
+	}
+	tmp[tp] = '\0';
+	*str = tmp;
 }
 
-int             get_num(char n, char *base)
+int				get_num(char n, char *base)
 {
-    printf("->%s\n", __func__);
 	int			p;
 
 	p = 0;
@@ -58,83 +53,75 @@ int             get_num(char n, char *base)
 	return (p);
 }
 
-char            operate(char _a, char _b, char *base, int *carry)
+char			operate(char a_, char b_, char *base, int *carry)
 {
-    printf("->%s\n", __func__);
-    int         a;
-    int         b;
-    int         c;
-    char        _c;
-    int         base_len;
+	int			a;
+	int			b;
+	int			c;
+	char		c_;
+	int			base_len;
 
-    a = get_num(_a, base);
-    b = get_num(_b, base);
-    c = a + b + *carry;
-    b_printf("%d + %d + (%d)\n", a, b, *carry);
-    b_printf("sum (c): %d\n", c);
-    base_len = ft_strlen(base);
-    if (c >= base_len)
-    {
-        *carry = c / base_len;
-        c %= base_len;
-    }
-    else
-    {
-        *carry = 0;
-    }
-    b_printf("c mod base: %d\n", c);
-    b_printf("carry: %d\n", *carry);
-    b_printf("_c = base[%d] (%c)\n", c, base[c]);
-    _c = base[c];
-    
-    b_printf("return _c (%c)\n", _c);
-    return (_c);
+	a = get_num(a_, base);
+	b = get_num(b_, base);
+	c = a + b + *carry;
+	base_len = ft_strlen(base);
+	if (c >= base_len)
+	{
+		*carry = c / base_len;
+		c %= base_len;
+	}
+	else
+	{
+		*carry = 0;
+	}
+	c_ = base[c];
+	return (c_);
 }
 
-char            *add(char *o1, char *o2, char *base)
+char			*add(char *o1, char *o2, char *base)
 {
-    printf("->%s\n", __func__);
-    char        *sum;
-    int         p;
-    int         sp;
-    int         carry;
-    
-    p = ft_strlen(o1) - 1;
-    sum = (char *)ft_memalloc(sizeof(char) * (p + 2));
-    sp = 0;
+	char		*sum;
+	int			p;
+	int			sp;
+	int			carry;
+
+	p = ft_strlen(o1) - 1;
+	sum = (char *)ft_memalloc(sizeof(char) * (p + 3));
+	sp = 0;
 	carry = 0;
-    while (p >= 0)
-    {
+	while (p >= 0)
+	{
 		sum[sp] = operate(o1[p], o2[p], base, &carry);
-        b_printf("sum[%d] = %c\n", sp, sum[sp]);
 		sp += 1;
 		p -= 1;
-    }
-    sum[sp] = base[carry];
+	}
+	sum[sp] = base[carry];
 	ft_strrev(sum);
-	printf("sum = %s\n", sum);
-    return (sum);
+	return (sum);
 }
 
-char            *addition(char *o1, char *o2, char *base)
+char			*addition(char *o1, char *o2, char *base)
 {
-    printf("->%s\n", __func__);
-    int             p1;
-    int             p2;
-    char            *sum;
+	int				p1;
+	int				p2;
+	char			*sum;
 
-    p1 = ft_strlen(o1) - 1;
-    p2 = ft_strlen(o2) - 1;
-    if (p1 < p2)
-    {
-        pad_string_zero(&o1, p2 - p1, base[0]);
-    }
-    else if (p2 < p1)
-    {
-        pad_string_zero(&o2, p1 - p2, base[0]);
-    }
-    printf("%s\n%s\n", o1, o2);
-    sum = add(o1, o2, base);
-    printf("sum: %s\n", sum);
-    return (sum);
+	if (o1[0] == '-' || o2[0] == '-')
+	{
+		return (redirect_addition(o1, o2, base));
+	}
+	p1 = ft_strlen(o1) - 1;
+	p2 = ft_strlen(o2) - 1;
+	if (p1 < p2)
+	{
+		pad_string_zero(&o1, p2 - p1, base[0]);
+	}
+	else if (p2 < p1)
+	{
+		pad_string_zero(&o2, p1 - p2, base[0]);
+	}
+	sum = add(o1, o2, base);
+	if (sum[0] == base[0])
+		trim_zeros(&sum, base);
+	return (sum);
 }

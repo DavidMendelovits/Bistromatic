@@ -6,7 +6,7 @@
 /*   By: dmendelo <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/09/19 16:49:40 by dmendelo          #+#    #+#             */
-/*   Updated: 2018/10/16 20:58:34 by dmendelo         ###   ########.fr       */
+/*   Updated: 2018/10/21 23:43:29 by dmendelo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,36 +16,13 @@
 #define END_OP "Error! -> You need to end with an operand\n"
 #define MISSING_OP "Error! -> You need to include an operator\n"
 
-int				is_priority(char a1, char a2)
-{
-	printf("\nfunction -> is_priority\n");
-	if ((a1 == '^' || a1 == '#')  && a2 != '(')
-	{
-		printf("%c is priority over %c\n", a1, a2);
-		return (1);
-	}
-	else if ((a1 == '*' || a1 == '/' || a1 == '%' ) && (a2 != '^' && a2 != '('))
-	{
-
-		printf("%c is priority over %c\n", a1, a2);
-		return (1);
-	}
-	else if ((a1 == '+' || a1 == '-') && (a2 == '+' || a2 == '-'))	
-	{
-		printf("%c is priority over %c\n", a1, a2);
-		return (1);
-	}
-	printf("%c isn't priority over %c\n", a1, a2);
-	return (0);
-}
-
 /*
 ** top of the stack will be one less than current position?
 */
-void            redirect_operator(char op, t_op *o, t_stack **head)
+
+void			redirect_operator(char op, t_op *o, t_stack **head)
 {
-	FUNC();
-    char			tmp;
+	char			tmp;
 
 	printf("\nfunction -> redirect_operator\n");
 	printf("stack before:\n");
@@ -63,122 +40,87 @@ void            redirect_operator(char op, t_op *o, t_stack **head)
 	print_op_stack(*o);
 }
 
-int				is_unary_negative(char *input, int p, char *base)
+
+
+int				eval_parenthesis(t_input *data, t_op *o, t_stack **stack)
 {
-	if (p == 0 && input[p] == '-')
+	if (data->input[data->p] == '(')
 	{
-		return (1);
+		if (data->p > 0 && !is_op(data->input[data->p - 1]))
+			return ((int)write_error(MISSING_OP, sizeof(MISSING_OP)));
+		push_op(o, data->input[data->p]);
 	}
-	else if (p >= 1 && input[p] == '-' && input[p - 1] == '(')
+	else if (data->input[data->p] == ')')
 	{
-		return (1);
+		if (!push_paren_contents(stack, o))
+			return ((int)write_error(MISSING_(), sizeof(MISSING_())));
 	}
-	else if (p >= 2 && input[p] == '-' && input[p - 1] == ')' 
-			&& is_nbr(input[p - 2], base))
-	{
-		return (0);
-	}
-	else if (input[p] == '-' && ((input[p - 1] == ')')
-			|| (is_op(input[p - 1]) && is_nbr(input[p + 1], base))))
-	{
-		return (1);
-	}
-	return (0);
+	return (1);
 }
 
-int				is_unary_positive(char *input, int p, char *base)
+void			init_input_struct(t_input **data, char *base, char *input)
 {
-	if (p == 0 & input[p] == '+')
-	{
-		return (1);
-	}
-	else if (p >= 2 && input[p] == '+' && input[p - 1] == ')' 
-			&& is_nbr(input[p - 2], base))
-	{
-		return (0);
-	}
-	else if (input[p] == '+' && ((input[p - 1] == ')')
-			|| (is_op(input[p - 1]) && is_nbr(input[p + 1], base))))
-	{
-		return (1);
-	}
-	return (0);
+	*data = (t_input *)malloc(sizeof(t_input));
+	(*data)->input = input;
+	(*data)->len = ft_strlen(input);
+	(*data)->base = base;
+	(*data)->p = 0;
+	(*data)->sign = 0;
 }
-/*
-void			extract_negative_operand(t_stack **head, char *input, int *p, char *base)
-{
-	FUNC();
-	int				begin;
 
-	begin = *p;
-	*p += 1;
-	while (is_nbr(input[*p], base))
+void			get_sign(t_input **data)
+{
+	if ((*data)->input[(*data)->p] == '-')
 	{
-		*p += 1;
+		(*data)->sign = ((*data)->sign) ? 0 : 1;
 	}
-	*p -= 1;
-	push_operand(head, ft_strdup_range(input, begin, *p));
 }
-*/
-t_stack         *infix_postfix(char *input, char *base)
-{
-    t_stack         *stack;
-    t_op            op;
-    int             ip;
 
-    printf("\nfunction -> infix_postfix\n");
-	init_op_stack(&op);
-    ip = 0;
-	stack = NULL;
-    while (input[ip])
-    {
-		printf("-------------input[%d] = %c\n", ip, input[ip]);
-        if (is_op(input[ip]))
-        {
-			if (is_unary_negative(input, ip, base))
-				redirect_operator('#', &op, &stack);
-			else if (is_unary_positive(input, ip, base))
-				redirect_operator('!', &op, &stack);
-			else
-            	redirect_operator(input[ip], &op, &stack);
-        }
-        else if (is_nbr(input[ip], base))
-        {
-            extract_operand(&stack, input, &ip, base);
-        }
-        else if (input[ip] == '(')
-        {
-			if (ip > 0 && !is_op(input[ip - 1]))
-			{
-				write(2, MISSING_OP, sizeof(MISSING_OP));
-				return (NULL);
-			}
-            push_op(&op, input[ip]);
-        }
-        else if (input[ip] == ')')
-        {
-            if (!push_paren_contents(&stack, &op))
-			{
-				write(2, MISSING_(), sizeof(MISSING_()));
-				return (NULL);
-			}
-        }
-        ip += 1;
-		if (stack)
+void			eval_op(t_input **data, t_op *o, t_stack **stack)
+{
+	if (is_unary_negative((*data)->input, (*data)->p, (*data)->base)
+		|| is_unary_positive((*data)->input, (*data)->p, (*data)->base))
+	{
+		get_sign(data);
+	}
+	else if (is_nbr((*data)->input[(*data)->p], (*data)->base))
+	{
+			extract_operand(stack, (*data)->input, &(*data)->p, (*data)->base);
+	}
+	else if (is_op((*data)->input[(*data)->p]))
+		redirect_operator((*data)->input[(*data)->p], o, stack);	
+	else if ((*data)->input[(*data)->p] == '(' || (*data)->input[(*data)->p] == ')')
+	{
+		if (!eval_parenthesis(*data, o, stack))
 		{
-			print_output_stack(stack);
-//			print_op_stack(op);
+			write_error(SYNTAX_ERROR, sizeof(SYNTAX_ERROR));
+			g_err = 1;
 		}
-    }
-	if (is_op(input[ip - 1]))
-	{
-		write(2, END_OP, ft_strlen(END_OP));
-		return (NULL);
 	}
+	(*data)->p += 1;
+}
+
+t_stack			*infix_postfix(char *input_, char *base)
+{
+	t_stack			*stack;
+	t_op			op;
+	t_input			*data;
+
+	init_input_struct(&data, base, input_);
+	init_op_stack(&op);
+	stack = NULL;
+	while (data->input[data->p])
+	{
+		if (g_err)
+			return (NULL);
+		printf(" ->-> %c\n", data->input[data->p]);
+		eval_op(&data, &op, &stack);
+		if (stack)
+			print_output_stack(stack);
+	}
+	if (is_op(data->input[data->p - 1]))
+		return (write_error(END_OP, sizeof(END_OP)));
 	if (!empty_operator_stack(&op, &stack) || op.is_parenthesis < 0)
-	{
-		write(2, MISSING_(), ft_strlen(MISSING_()));
-		return (NULL);
-	}
-    return (stack);
+		return (write_error(MISSING_(), sizeof(MISSING_())));
+	return (stack);
 }
