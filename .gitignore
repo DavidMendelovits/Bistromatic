@@ -1,0 +1,6 @@
+*.swp
+*.swo
+.DS*
+._DS*
+a.out*
+
